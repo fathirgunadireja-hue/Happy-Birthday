@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Kenangan | Selamat Ulang Tahun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            height: 300px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--pink-light), var(--blue-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--pink-secondary);
+        }
+
+        .modal-image {
+            font-size: 6rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--pink-secondary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .modal-date {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-description {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .memory-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--white-transparent);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--pink-primary);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--pink-secondary);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* ===== MUSIC PLAYER ===== */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            z-index: 1500;
+            max-width: 280px;
+            animation: slideInRight 0.5s ease;
+            border: 2px solid #ff9cd6;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .music-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: #ff6b9d;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .music-header i {
+            font-size: 1.2rem;
+        }
+
+        .music-title {
+            font-size: 0.95rem;
+        }
+
+        .music-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .music-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ffd6ec;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .music-btn i {
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            flex-shrink: 0;
+        }
+
+        .music-btn:hover {
+            background: linear-gradient(135deg, #ffe0f0, #ffd6ec);
+            border-color: #ff9cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+        }
+
+        .music-btn.active {
+            background: linear-gradient(135deg, #ff9cd6, #ffc0da);
+            border-color: #ff6b9d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .music-btn.active i {
+            color: white;
+        }
+
+        .music-btn.active .music-name,
+        .music-btn.active .music-duration {
+            color: white;
+        }
+
+        .music-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .music-name {
+            font-weight: 700;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-duration {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            color: #7e5a7b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-btn:hover .music-name {
+            color: #ff3366;
+        }
+
+        .music-btn.active .music-duration {
+            opacity: 0.9;
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #ffd6ec;
+        }
+
+        .music-control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.2);
+            color: #ff3366;
+        }
+
+        .music-progress {
+            flex: 1;
+            height: 4px;
+            background: #ffd6ec;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff6b9d, #ff9cd6);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .music-time {
+            font-size: 0.75rem;
+            color: #7e5a7b;
+            font-weight: 600;
+            min-width: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: unset;
+            }
+
+            .music-options {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .music-btn {
+                padding: 10px 12px;
+            }
+
+            .music-btn i {
+                font-size: 1rem;
+            }
+
+            .music-name {
+                font-size: 0.85rem;
+            }
+
+            .music-duration {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MUSIC PLAYER -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <i class="fas fa-music"></i>
+            <span class="music-title">Pilih Musik Favorit Kita</span>
+        </div>
+        <div class="music-options">
+            <button class="music-btn" data-song="1">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Lagu Cinta 💕</div>
+                    <div class="music-duration">Romantic Vibes</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="2">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Senyuman Kamu 😊</div>
+                    <div class="music-duration">Happy Feels</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="3">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Selamanya Kamu 💑</div>
+                    <div class="music-duration">Forever Mood</div>
+                </div>
+            </button>
+        </div>
+        <div class="music-controls">
+            <button class="music-control-btn" id="muteBtn" title="Mute/Unmute">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="music-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="music-time" id="musicTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#/home" class="navbar-brand">
+                <span>🎂</span> Happy Birthday
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="#/home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/game.html"><i class="fas fa-gamepad"></i> Game</a></li>
+                <li><a href="#/gallery.html" class="active"><i class="fas fa-images"></i> Galeri</a></li>
+                <li><a href="#/messages.html"><i class="fas fa-envelope"></i> Pesan</a></li>
+                <li><a href="#/timeline.html"><i class="fas fa-heart"></i> Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">📸 Galeri Gila-gilaan Kita 📸</h1>
+        <p class="page-subtitle">Koleksi moment di mana aku bisa seakan tidur sambil menatapmu (dan tidak ketahuan). 👀💕</p>
+
+        <!-- Statistics -->
+        <div class="memory-stats">
+            <div class="stat-card">
+                <div class="stat-number">47</div>
+                <div class="stat-label">Total Momen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Tahun Bersama</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Rasa Cinta</div>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid">
+            <!-- Momen 1 -->
+            <div class="gallery-item" data-id="1">
+                <div class="gallery-item-placeholder">
+                    <span>🎓</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 2 -->
+            <div class="gallery-item" data-id="2">
+                <div class="gallery-item-placeholder">
+                    <span>🌅</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 3 -->
+            <div class="gallery-item" data-id="3">
+                <div class="gallery-item-placeholder">
+                    <span>🎂</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 4 -->
+            <div class="gallery-item" data-id="4">
+                <div class="gallery-item-placeholder">
+                    <span>✈️</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 5 -->
+            <div class="gallery-item" data-id="5">
+                <div class="gallery-item-placeholder">
+                    <span>💑</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 6 -->
+            <div class="gallery-item" data-id="6">
+                <div class="gallery-item-placeholder">
+                    <span>🎪</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 7 -->
+            <div class="gallery-item" data-id="7">
+                <div class="gallery-item-placeholder">
+                    <span>🍽️</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 8 -->
+            <div class="gallery-item" data-id="8">
+                <div class="gallery-item-placeholder">
+                    <span>🎭</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+
+            <!-- Momen 9 -->
+            <div class="gallery-item" data-id="9">
+                <div class="gallery-item-placeholder">
+                    <span>🌸</span>
+                </div>
+                <div class="gallery-item-overlay">
+                    <div class="gallery-item-title">Klik untuk detail</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-image" id="modalImage"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-date" id="modalDate"></div>
+            <p class="modal-description" id="modalDescription"></p>
+            <div class="modal-actions">
+                <button class="btn" id="likeBtn"><i class="fas fa-heart"></i> <span id="likeCount">0</span> Suka</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Dibuat dengan <span class="heart-animation">❤️</span> penuh cinta untuk merayakan hari spesialmu!</p>
+        <p style="margin-top: 10px; color: var(--pink-secondary); font-weight: 600;">Selamat Ulang Tahun Sayang! 🎂✨</p>
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        const memoryData = [
+            {
+                id: 1,
+                title: "Wisuda Bersama",
+                date: "15 Juni 2019",
+                emoji: "🎓",
+                description: "Hari kelulusan kita yang tak terlupakan. Aku masih ingat bagaimana kebahagiaan di mata kamu saat itu. Terima kasih telah mendukungku setiap langkah."
+            },
+            {
+                id: 2,
+                title: "Fajar di Pantai",
+                date: "23 Agustus 2020",
+                emoji: "🌅",
+                description: "Menonton fajar bersama dengan tangan yang saling bergenggam. Itu adalah momen paling romantis dalam hidupku. Cinta kita bersinar lebih terang dari mentari pagi."
+            },
+            {
+                id: 3,
+                title: "Perayaan Ulang Tahun Pertama",
+                date: "12 Desember 2021",
+                emoji: "🎂",
+                description: "Kue pertama yang kita rayakan bersama. Setiap lilin yang aku tiup adalah doa untuk kita bisa selamanya bersama. Senyummu adalah hadiah terbaik untukku."
+            },
+            {
+                id: 4,
+                title: "Petualangan ke Bali",
+                date: "7 Februari 2022",
+                emoji: "✈️",
+                description: "Liburan pertama kita ke pulau yang indah. Setiap pantai yang kita kunjungi, setiap sunset yang kita saksikan, semuanya lebih bermakna karena kamu di sebelahku."
+            },
+            {
+                id: 5,
+                title: "Momen Intim Kita",
+                date: "14 Februari 2023",
+                emoji: "💑",
+                description: "Hari Valentine yang penuh dengan cinta dan kehangatan. Tidak ada tempat lain yang ingin aku kunjungi kecuali hatimu. Kamu adalah rumah bagiku."
+            },
+            {
+                id: 6,
+                title: "Pesta Kejutan",
+                date: "20 Mei 2023",
+                emoji: "🎪",
+                description: "Kejutan pesta yang aku rencanakan dengan teman-teman kita. Melihat kebahagiaan di wajahmu adalah saat-saat terbaik dalam hidupku. Kamu pantas mendapat segalanya."
+            },
+            {
+                id: 7,
+                title: "Makan Malam Romantis",
+                date: "8 Agustus 2023",
+                emoji: "🍽️",
+                description: "Malam yang penuh dengan percakapan bermakna dan tawa. Setiap gigitan makanan terasa lebih lezat karena kami bersama. Momen-momen sederhana dengan kamu adalah yang terbaik."
+            },
+            {
+                id: 8,
+                title: "Konser Musik Bersama",
+                date: "16 November 2023",
+                emoji: "🎭",
+                description: "Merasakan musik yang sama, menari di bawah cahaya yang sama, dengan jantung yang berdetak berirama yang sama. Itu adalah sinkronisasi sempurna dari dua jiwa yang saling cinta."
+            },
+            {
+                id: 9,
+                title: "Piknik di Taman Bunga",
+                date: "22 Maret 2024",
+                emoji: "🌸",
+                description: "Dikelilingi oleh bunga-bunga indah, tapi yang paling indah adalah senyummu. Setiap kelopak bunga yang berjatuhan terasa seperti hujan berkat untuk cinta kita."
+            }
+        ];
+
+        const modal = document.getElementById('modal');
+        const modalClose = document.querySelector('.modal-close');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id);
+                const memory = memoryData.find(m => m.id === id);
+
+                document.getElementById('modalImage').textContent = memory.emoji;
+                document.getElementById('modalTitle').textContent = memory.title;
+                document.getElementById('modalDate').textContent = memory.date;
+                document.getElementById('modalDescription').textContent = memory.description;
+                document.getElementById('likeCount').textContent = '0';
+
+                modal.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const count = parseInt(document.getElementById('likeCount').textContent);
+            document.getElementById('likeCount').textContent = count + 1;
+            this.style.background = 'linear-gradient(to right, var(--pink-secondary), var(--pink-dark))';
+        });
+
+        // ===== MUSIC PLAYER INTERACTION =====
+        const musicData = {
+            1: 'assets/music/TULUS - Monokrom.mp3',
+            2: 'assets/music/TULUS - Monokrom.mp3',
+            3: 'assets/music/TULUS - Monokrom.mp3'
+        };
+
+        const musicBtns = document.querySelectorAll('.music-btn');
+        const muteBtn = document.getElementById('muteBtn');
+        const progressBar = document.getElementById('progressBar');
+        const musicTime = document.getElementById('musicTime');
+        const musicProgress = document.querySelector('.music-progress');
+
+        function updateMusicUI() {
+            const currentSong = localStorage.getItem('selectedSong');
+            musicBtns.forEach(btn => {
+                if (btn.dataset.song === currentSong) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        musicBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songNum = this.dataset.song;
+                const currentlyPlaying = localStorage.getItem('selectedSong');
+                if (currentlyPlaying !== songNum) {
+                    localStorage.setItem('selectedSong', songNum);
+                    if (window.globalAudioPlayer) {
+                        window.globalAudioPlayer.src = musicData[songNum];
+                        window.globalAudioPlayer.currentTime = 0;
+                        const isMuted = localStorage.getItem('musicMuted') === 'true';
+                        if (!isMuted) {
+                            window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                        }
+                    }
+                }
+                updateMusicUI();
+            });
+        });
+
+        muteBtn.addEventListener('click', function() {
+            const isMuted = localStorage.getItem('musicMuted') === 'true';
+            localStorage.setItem('musicMuted', !isMuted);
+            
+            if (window.globalAudioPlayer) {
+                if (!isMuted) {
+                    window.globalAudioPlayer.pause();
+                    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else {
+                    window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+            }
+        });
+
+        if (window.globalAudioPlayer) {
+            window.globalAudioPlayer.addEventListener('timeupdate', function() {
+                if (this.duration) {
+                    const percent = (this.currentTime / this.duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    const minutes = Math.floor(this.currentTime / 60);
+                    const seconds = Math.floor(this.currentTime % 60);
+                    musicTime.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                }
+            });
+        }
+
+        musicProgress.addEventListener('click', function(e) {
+            if (window.globalAudioPlayer && window.globalAudioPlayer.duration) {
+                const rect = this.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                window.globalAudioPlayer.currentTime = percent * window.globalAudioPlayer.duration;
+            }
+        });
+
+        updateMusicUI();
+        const isMuted = localStorage.getItem('musicMuted') === 'true';
+        if (isMuted) {
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        }
+    </script>
+</body>
+</html>

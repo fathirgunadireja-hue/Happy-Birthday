@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun! 🎂</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- MUSIC PLAYER -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <i class="fas fa-music"></i>
+            <span class="music-title">Pilih Musik Favorit Kita</span>
+        </div>
+        <div class="music-options">
+            <button class="music-btn" data-song="1">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Lagu Cinta 💕</div>
+                    <div class="music-duration">Romantic Vibes</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="2">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Senyuman Kamu 😊</div>
+                    <div class="music-duration">Happy Feels</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="3">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Selamanya Kamu 💑</div>
+                    <div class="music-duration">Forever Mood</div>
+                </div>
+            </button>
+        </div>
+        <div class="music-controls">
+            <button class="music-control-btn" id="muteBtn" title="Mute/Unmute">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="music-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="music-time" id="musicTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- PASSWORD SCREEN -->
+    <div class="password-container" id="passwordContainer">
+        <div class="password-background-animation" id="backgroundAnimation"></div>
+        
+        <div class="password-box">
+            <div class="lock-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            
+            <h1 class="password-title">🔐 Kode Akses 🔐</h1>
+            <p class="password-subtitle">Jangan lupa tanggal istimewa kita, sayang! 💕</p>
+            
+            <div class="password-input-group">
+                <label class="password-label">Kode Akses (4 digit):</label>
+                <div class="password-input-wrapper">
+                    <input type="text" class="password-digit" maxlength="1" data-index="0" inputmode="numeric">
+                    <input type="text" class="password-digit" maxlength="1" data-index="1" inputmode="numeric">
+                    <input type="text" class="password-digit" maxlength="1" data-index="2" inputmode="numeric">
+                    <input type="text" class="password-digit" maxlength="1" data-index="3" inputmode="numeric">
+                </div>
+            </div>
+            
+            <div class="password-buttons">
+                <button class="password-num-btn" data-num="1">🧋</button>
+                <button class="password-num-btn" data-num="2">🎂</button>
+                <button class="password-num-btn" data-num="3">💕</button>
+                <button class="password-num-btn" data-num="4">🌹</button>
+                <button class="password-num-btn" data-num="5">😘</button>
+                <button class="password-num-btn" data-num="6">🎁</button>
+                <button class="password-num-btn" data-num="7">⭐</button>
+                <button class="password-num-btn" data-num="8">🔥</button>
+                <button class="password-num-btn" data-num="9">🌟</button>
+                <button class="password-num-btn" data-num="0">💖</button>
+            </div>
+            
+            <div class="password-action-buttons">
+                <button class="password-delete-btn" id="deleteBtn">
+                    <i class="fas fa-backspace"></i> Hapus
+                </button>
+                <button class="password-submit-btn" id="submitBtn" disabled>
+                    <i class="fas fa-check"></i> Buka
+                </button>
+            </div>
+            
+            <div class="password-message" id="passwordMessage"></div>
+            
+            <div class="password-hint">
+                💡 Hint: Tanggal istimewa kita... MMDD
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#/home" class="navbar-brand">
+                <span>🎂</span> Happy Birthday
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="#/home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/game.html"><i class="fas fa-gamepad"></i> Game</a></li>
+                <li><a href="#/gallery.html"><i class="fas fa-images"></i> Galeri</a></li>
+                <li><a href="#/messages.html"><i class="fas fa-envelope"></i> Pesan</a></li>
+                <li><a href="#/timeline.html"><i class="fas fa-heart"></i> Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="homepage-container">
+        <div class="stars" id="starsContainer"></div>
+        
+        <div class="homepage-content">
+            <div class="birthday-animation">🎂✨</div>
+            <h1 class="main-title">Halo Sayang! 👋💕</h1>
+            <p class="subtitle">Kamu tahu ini spesial karena ada kamu di dalamnya...</p>
+            
+            <div class="nav-buttons">
+                <a href="#/game.html" class="nav-card">
+                    <div class="nav-card-icon">🎮</div>
+                    <div class="nav-card-title">Mainkan Game</div>
+                    <div class="nav-card-desc">Serius? Harus dimainkan sih! 😏</div>
+                </a>
+
+                <a href="#/gallery.html" class="nav-card">
+                    <div class="nav-card-icon">📸</div>
+                    <div class="nav-card-title">Galeri Kita</div>
+                    <div class="nav-card-desc">Lihat kenangan-kenangan ganteng 😘</div>
+                </a>
+
+                <a href="#/messages.html" class="nav-card">
+                    <div class="nav-card-icon">💌</div>
+                    <div class="nav-card-title">Pesan Cinta</div>
+                    <div class="nav-card-desc">Mungkin bikin kamu nangis 🥺❤️</div>
+                </a>
+
+                <a href="#/timeline.html" class="nav-card">
+                    <div class="nav-card-icon">💕</div>
+                    <div class="nav-card-title">Perjalanan Kita</div>
+                    <div class="nav-card-desc">Dari dulu sampai sekarang (cerita panjang 📖)</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main id="spaView" style="display:none"></main>
+
+    <script src="shared.js"></script>
+    <script>
+        // Musik dikelola oleh shared.js (global player)
+
+        // ===== PASSWORD SYSTEM =====
+        const CORRECT_PASSWORD = "0701";
+        let currentPassword = "";
+        const passwordDigits = document.querySelectorAll('.password-digit');
+        const passwordMessage = document.getElementById('passwordMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const numButtons = document.querySelectorAll('.password-num-btn');
+        const passwordContainer = document.getElementById('passwordContainer');
+
+        // Tambah background animation emoji
+        const emojis = ['💖', '🎂', '🎉', '🌟', '💕', '🎁', '✨', '💌'];
+        const bgAnimation = document.getElementById('backgroundAnimation');
+        for (let i = 0; i < 20; i++) {
+            const emoji = document.createElement('div');
+            emoji.className = 'floating-emoji';
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + '%';
+            emoji.style.top = Math.random() * 100 + '%';
+            emoji.style.animationDelay = Math.random() * 6 + 's';
+            emoji.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
+            bgAnimation.appendChild(emoji);
+        }
+
+        // Number button handlers
+        numButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (currentPassword.length < 4) {
+                    currentPassword += this.dataset.num;
+                    updateDisplay();
+                    playClickSound();
+                }
+            });
+        });
+
+        // Keyboard input
+        passwordDigits.forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key >= '0' && e.key <= '9') {
+                    if (currentPassword.length < 4) {
+                        currentPassword += e.key;
+                        updateDisplay();
+                    }
+                } else if (e.key === 'Backspace') {
+                    currentPassword = currentPassword.slice(0, -1);
+                    updateDisplay();
+                } else if (e.key === 'Enter') {
+                    checkPassword();
+                }
+                e.preventDefault();
+            });
+        });
+
+        // Delete button
+        deleteBtn.addEventListener('click', function() {
+            currentPassword = "";
+            updateDisplay();
+            playClickSound();
+            passwordMessage.textContent = '';
+        });
+
+        // Submit button
+        submitBtn.addEventListener('click', checkPassword);
+
+        function updateDisplay() {
+            // Update digit displays
+            passwordDigits.forEach((digit, index) => {
+                if (index < currentPassword.length) {
+                    digit.value = '●';
+                    digit.classList.add('filled');
+                } else {
+                    digit.value = '';
+                    digit.classList.remove('filled', 'error');
+                }
+            });
+
+            // Enable/disable submit button
+            submitBtn.disabled = currentPassword.length !== 4;
+            submitBtn.style.opacity = currentPassword.length === 4 ? '1' : '0.5';
+            
+            // Clear message
+            if (passwordMessage.classList.contains('error')) {
+                passwordMessage.classList.remove('error');
+                passwordMessage.textContent = '';
+            }
+        }
+
+        function checkPassword() {
+            if (currentPassword.length !== 4) return;
+
+            if (currentPassword === CORRECT_PASSWORD) {
+                // Correct password
+                passwordMessage.classList.remove('error');
+                passwordMessage.textContent = '✅ Berhasil! Selamat datang...';
+                passwordMessage.style.color = '#28a745';
+                
+                playSuccessSound();
+                
+                // Animate out
+                setTimeout(() => {
+                    passwordContainer.style.animation = 'fadeOut 0.8s ease forwards';
+                    setTimeout(() => {
+                        passwordContainer.classList.add('hidden');
+                    }, 800);
+                }, 500);
+            } else {
+                // Wrong password
+                currentPassword = "";
+                updateDisplay();
+                
+                passwordMessage.classList.add('error');
+                passwordMessage.textContent = '❌ Kode salah! Coba lagi...';
+                
+                // Shake all digit inputs
+                passwordDigits.forEach(digit => {
+                    digit.classList.add('error');
+                    setTimeout(() => digit.classList.remove('error'), 500);
+                });
+                
+                playClickSound();
+                
+                setTimeout(() => {
+                    passwordMessage.textContent = '';
+                }, 2000);
+            }
+        }
+
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Set first input focus
+        passwordDigits[0].focus();
+    
+        // Generate stars
+        const starsContainer = document.getElementById('starsContainer');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Confetti animation on page load
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.background = ['var(--pink-primary)', 'var(--blue-primary)', 'var(--yellow)', 'var(--purple)'][Math.floor(Math.random() * 4)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3500);
+            }
+        }
+
+        // Click event to create floating hearts
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-card')) {
+                for (let i = 0; i < 3; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'floating-hearts';
+                    heart.textContent = '❤️';
+                    heart.style.left = e.clientX + 'px';
+                    heart.style.top = e.clientY + 'px';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 4000);
+                }
+            }
+        });
+
+        // Play music on interaction
+        createConfetti();
+        
+        // Create additional confetti every few seconds
+        setInterval(createConfetti, 5000);
+    </script>
+</body>
+</html>

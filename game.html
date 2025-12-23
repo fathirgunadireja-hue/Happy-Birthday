@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Ulang Tahun | Game Cinta untukmu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===== MUSIC PLAYER ===== */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            z-index: 1500;
+            max-width: 280px;
+            animation: slideInRight 0.5s ease;
+            border: 2px solid #ff9cd6;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .music-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: #ff6b9d;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .music-header i {
+            font-size: 1.2rem;
+        }
+
+        .music-title {
+            font-size: 0.95rem;
+        }
+
+        .music-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .music-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ffd6ec;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .music-btn i {
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            flex-shrink: 0;
+        }
+
+        .music-btn:hover {
+            background: linear-gradient(135deg, #ffe0f0, #ffd6ec);
+            border-color: #ff9cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+        }
+
+        .music-btn.active {
+            background: linear-gradient(135deg, #ff9cd6, #ffc0da);
+            border-color: #ff6b9d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .music-btn.active i {
+            color: white;
+        }
+
+        .music-btn.active .music-name,
+        .music-btn.active .music-duration {
+            color: white;
+        }
+
+        .music-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .music-name {
+            font-weight: 700;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-duration {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            color: #7e5a7b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-btn:hover .music-name {
+            color: #ff3366;
+        }
+
+        .music-btn.active .music-duration {
+            opacity: 0.9;
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #ffd6ec;
+        }
+
+        .music-control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.2);
+            color: #ff3366;
+        }
+
+        .music-progress {
+            flex: 1;
+            height: 4px;
+            background: #ffd6ec;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff6b9d, #ff9cd6);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .music-time {
+            font-size: 0.75rem;
+            color: #7e5a7b;
+            font-weight: 600;
+            min-width: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: unset;
+            }
+
+            .music-options {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .music-btn {
+                padding: 10px 12px;
+            }
+
+            .music-btn i {
+                font-size: 1rem;
+            }
+
+            .music-name {
+                font-size: 0.85rem;
+            }
+
+            .music-duration {
+                font-size: 0.7rem;
+            }
+        }
+
+        .game-container, .container {
+            padding-bottom: 150px;
+        }
+
+        @media (max-width: 600px) {
+            .game-container, .container {
+                padding-bottom: 200px;
+            }
+        }
+
+        /* ===== GAME SPECIFIC STYLES ===== */
+        .game-header {
+            text-align: center;
+            padding: 30px;
+            background: var(--white-transparent);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 5px dashed var(--pink-primary);
+        }
+
+        .game-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(to right, var(--pink-primary), var(--yellow), var(--blue-primary));
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--pink-secondary), var(--purple), var(--blue-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* ===== STATS GAME ===== */
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--pink-primary);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--pink-secondary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 15px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+            border: 2px solid var(--pink-light);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--pink-primary), var(--blue-primary));
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* ===== LEVEL GAME ===== */
+        .levels-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .level-card {
+            background: var(--white-transparent);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .level-card:hover:not(.locked) {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .level-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+
+        .level-card.locked:hover {
+            transform: none;
+            box-shadow: var(--shadow);
+        }
+
+        .level-card.completed {
+            border-color: var(--yellow);
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255, 209, 102, 0.1) 100%);
+        }
+
+        .level-card.active {
+            border-color: var(--pink-secondary);
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255, 155, 214, 0.15) 100%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 157, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 107, 157, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 157, 0); }
+        }
+
+        .level-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .level-title {
+            font-size: 1.5rem;
+            color: var(--pink-secondary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .level-desc {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .level-reward {
+            background: var(--yellow);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .level-badge.locked {
+            background: var(--gray-light);
+            color: var(--text-secondary);
+        }
+
+        .level-badge.completed {
+            background: var(--yellow);
+            color: var(--text-primary);
+        }
+
+        .level-badge.active {
+            background: var(--pink-secondary);
+            color: white;
+        }
+
+        /* ===== GAME CONTENT ===== */
+        .game-content {
+            background: var(--white-transparent);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            display: none;
+            border: 3px solid var(--blue-light);
+        }
+
+        .game-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-title {
+            font-size: 2rem;
+            color: var(--pink-secondary);
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .content-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(to right, var(--pink-primary), var(--blue-primary));
+            border-radius: 2px;
+        }
+
+        /* ===== MEMORY GAME ===== */
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .memory-card {
+            height: 120px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card-front, .memory-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .memory-card-front {
+            background: linear-gradient(135deg, var(--pink-light), var(--blue-light));
+            color: var(--pink-secondary);
+        }
+
+        .memory-card-back {
+            background: white;
+            transform: rotateY(180deg);
+            border: 3px solid var(--pink-primary);
+        }
+
+        /* ===== QUIZ GAME ===== */
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--pink-primary);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: var(--white);
+            border: 2px solid var(--pink-light);
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .quiz-option:hover {
+            background: var(--pink-light);
+            transform: translateY(-3px);
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* ===== GAME CONTROLS ===== */
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding-top: 25px;
+            border-top: 2px dashed var(--pink-light);
+            flex-wrap: wrap;
+        }
+
+        .game-button {
+            background: linear-gradient(to right, var(--pink-primary), var(--blue-primary));
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+            flex: 1;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .game-button:hover:not(:disabled) {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        .game-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .game-button.secondary {
+            background: linear-gradient(to right, var(--yellow), var(--purple));
+            flex: 0 1 auto;
+        }
+
+        /* ===== POPUP ===== */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.7);
+            transition: transform 0.3s;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 5px solid var(--pink-primary);
+        }
+
+        .popup.active .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-icon {
+            font-size: 4rem;
+            color: var(--yellow);
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        .popup-title {
+            font-size: 2rem;
+            color: var(--pink-secondary);
+            margin-bottom: 15px;
+        }
+
+        .popup-text {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 1.8rem;
+            }
+
+            .levels-container {
+                grid-template-columns: 1fr;
+            }
+
+            .memory-game {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .game-controls {
+                flex-direction: column;
+            }
+
+            .game-button {
+                min-width: unset;
+            }
+
+            .content-title {
+                font-size: 1.5rem;
+            }
+
+            .game-stats {
+                flex-direction: column;
+            }
+
+            .stat-item {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MUSIC PLAYER -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <i class="fas fa-music"></i>
+            <span class="music-title">Pilih Musik Favorit Kita</span>
+        </div>
+        <div class="music-options">
+            <button class="music-btn" data-song="1">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Lagu Cinta 💕</div>
+                    <div class="music-duration">Romantic Vibes</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="2">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Senyuman Kamu 😊</div>
+                    <div class="music-duration">Happy Feels</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="3">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Selamanya Kamu 💑</div>
+                    <div class="music-duration">Forever Mood</div>
+                </div>
+            </button>
+        </div>
+        <div class="music-controls">
+            <button class="music-control-btn" id="muteBtn" title="Mute/Unmute">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="music-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="music-time" id="musicTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#/home" class="navbar-brand">
+                <span>🎂</span> Happy Birthday
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="#/home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/game.html" class="active"><i class="fas fa-gamepad"></i> Game</a></li>
+                <li><a href="#/gallery.html"><i class="fas fa-images"></i> Galeri</a></li>
+                <li><a href="#/messages.html"><i class="fas fa-envelope"></i> Pesan</a></li>
+                <li><a href="#/timeline.html"><i class="fas fa-heart"></i> Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- HEADER GAME -->
+        <div class="game-header">
+            <h1 class="game-title">Petualangan Ulang Tahun! 🎮</h1>
+            <p class="game-subtitle">Selesaikan semua level untuk hadiah spesial! 💖</p>
+        </div>
+
+        <!-- STATS GAME -->
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="level">1</div>
+                <div class="stat-label">Level</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="levelProgress" style="width: 20%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">Poin Cinta</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="scoreProgress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="hearts">0</div>
+                <div class="stat-label">Hati Terkumpul</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="heartsProgress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL SELECTION -->
+        <div class="levels-container">
+            <div class="level-card active" data-level="1">
+                <div class="level-badge active">1</div>
+                <div class="level-icon">🧩</div>
+                <h3 class="level-title">Puzzle Kenangan</h3>
+                <p class="level-desc">Temukan pasangan emoji!</p>
+                <div class="level-reward">+50 Poin</div>
+            </div>
+
+            <div class="level-card locked" data-level="2">
+                <div class="level-badge locked">2</div>
+                <div class="level-icon">❓</div>
+                <h3 class="level-title">Quiz Cinta</h3>
+                <p class="level-desc">Jawab pertanyaan!</p>
+                <div class="level-reward">+100 Poin</div>
+            </div>
+
+            <div class="level-card locked" data-level="3">
+                <div class="level-badge locked">3</div>
+                <div class="level-icon">🎁</div>
+                <h3 class="level-title">Bonus Stage</h3>
+                <p class="level-desc">Hadiah spesial!</p>
+                <div class="level-reward">+150 Poin</div>
+            </div>
+
+            <div class="level-card locked" data-level="4">
+                <div class="level-badge locked">4</div>
+                <div class="level-icon">💌</div>
+                <h3 class="level-title">Pesan Terakhir</h3>
+                <p class="level-desc">Hadiah utama!</p>
+                <div class="level-reward">+200 Poin</div>
+            </div>
+        </div>
+
+        <!-- GAME CONTENT AREA -->
+        <div id="gameContent" class="game-content active">
+            <!-- Konten akan diisi secara dinamis oleh JavaScript -->
+        </div>
+
+        <!-- GAME CONTROLS -->
+        <div class="game-controls">
+            <button class="game-button" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Sebelumnya
+            </button>
+            <button class="game-button secondary" id="hintBtn">
+                <i class="fas fa-lightbulb"></i> Petunjuk
+            </button>
+            <button class="game-button" id="nextBtn">
+                Selanjutnya <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Dibuat dengan <span class="heart-animation">❤️</span> penuh cinta untuk merayakan hari spesialmu!</p>
+        <p style="margin-top: 10px; color: var(--pink-secondary); font-weight: 600;">Selamat Ulang Tahun Sayang! 🎂✨</p>
+    </footer>
+
+    <!-- POPUP -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <div class="popup-icon" id="popupIcon">🎉</div>
+            <h2 class="popup-title" id="popupTitle">Level Selesai!</h2>
+            <p class="popup-text" id="popupText">Selamat! Kamu berhasil!</p>
+            <button class="btn" id="popupBtn">Lanjutkan</button>
+        </div>
+    </div>
+
+    <!-- AUDIO -->
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+    <audio id="successSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+
+    <script src="shared.js"></script>
+    <script>
+        // ===== GAME STATE =====
+        const gameState = {
+            currentLevel: 1,
+            score: 0,
+            hearts: 0,
+            maxHearts: 20,
+            maxScore: 500,
+            completedLevels: [1],
+            memoryPairsFound: 0,
+            quizAnswers: 0,
+        };
+
+        const gameData = {
+            levels: [
+                {
+                    id: 1,
+                    title: "Puzzle Kenangan",
+                    icon: "🧩",
+                    type: "memory",
+                    pairs: [
+                        { id: 1, emoji: "❤️" },
+                        { id: 2, emoji: "🎂" },
+                        { id: 3, emoji: "🌟" },
+                        { id: 4, emoji: "💖" }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Quiz Cinta",
+                    icon: "❓",
+                    type: "quiz",
+                    questions: [
+                        { question: "Warna favoritku?", options: ["Pink", "Biru", "Hijau", "Ungu"], correct: 0 },
+                        { question: "Makanan favorit?", options: ["Sushi", "Pizza", "Ice Cream", "Rendang"], correct: 2 },
+                        { question: "Dimana kita pertama ketemu?", options: ["Kafe", "Kampus", "Taman", "Konser"], correct: 1 }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "Bonus Stage",
+                    icon: "🎁",
+                    type: "collect",
+                    count: 5
+                },
+                {
+                    id: 4,
+                    title: "Pesan Terakhir",
+                    icon: "💌",
+                    type: "messages",
+                    messages: [
+                        { title: "Pesan 1", text: "Aku cinta kamu selamanya!" },
+                        { title: "Pesan 2", text: "Terima kasih sudah ada untukku!" },
+                        { title: "Pesan 3", text: "Selamat Ulang Tahun Sayang! 💖" }
+                    ]
+                }
+            ]
+        };
+
+        // DOM Elements
+        const DOM = {
+            levelDisplay: document.getElementById('level'),
+            scoreDisplay: document.getElementById('score'),
+            heartsDisplay: document.getElementById('hearts'),
+            levelProgress: document.getElementById('levelProgress'),
+            scoreProgress: document.getElementById('scoreProgress'),
+            heartsProgress: document.getElementById('heartsProgress'),
+            gameContent: document.getElementById('gameContent'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            hintBtn: document.getElementById('hintBtn'),
+            popup: document.getElementById('popup'),
+            popupIcon: document.getElementById('popupIcon'),
+            popupTitle: document.getElementById('popupTitle'),
+            popupText: document.getElementById('popupText'),
+            popupBtn: document.getElementById('popupBtn'),
+            clickSound: document.getElementById('clickSound'),
+            successSound: document.getElementById('successSound')
+        };
+
+        function updateStats() {
+            DOM.levelDisplay.textContent = gameState.currentLevel;
+            DOM.scoreDisplay.textContent = gameState.score;
+            DOM.heartsDisplay.textContent = gameState.hearts;
+            
+            DOM.levelProgress.style.width = `${(gameState.currentLevel / 4) * 100}%`;
+            DOM.scoreProgress.style.width = `${Math.min((gameState.score / gameState.maxScore) * 100, 100)}%`;
+            DOM.heartsProgress.style.width = `${Math.min((gameState.hearts / gameState.maxHearts) * 100, 100)}%`;
+            
+            document.querySelectorAll('.level-card').forEach(card => {
+                const level = parseInt(card.dataset.level);
+                card.classList.remove('active', 'completed', 'locked');
+                
+                if (gameState.completedLevels.includes(level)) {
+                    card.classList.add('completed');
+                } else if (level === gameState.currentLevel) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.add('locked');
+                }
+            });
+            
+            DOM.prevBtn.disabled = gameState.currentLevel === 1;
+            DOM.nextBtn.disabled = !gameState.completedLevels.includes(gameState.currentLevel) || gameState.currentLevel === 4;
+        }
+
+        function addScore(points) {
+            gameState.score += points;
+            if (gameState.score > gameState.maxScore) gameState.score = gameState.maxScore;
+            gameState.hearts++;
+            if (gameState.hearts > gameState.maxHearts) gameState.hearts = gameState.maxHearts;
+            updateStats();
+            playSound('success');
+        }
+
+        function playSound(soundName) {
+            try {
+                if (soundName === 'click') {
+                    DOM.clickSound.currentTime = 0;
+                    DOM.clickSound.play().catch(() => {});
+                } else if (soundName === 'success') {
+                    DOM.successSound.currentTime = 0;
+                    DOM.successSound.play().catch(() => {});
+                }
+            } catch (e) {
+                console.log("Sound error");
+            }
+        }
+
+        function showPopup(icon, title, text) {
+            DOM.popupIcon.textContent = icon;
+            DOM.popupTitle.textContent = title;
+            DOM.popupText.textContent = text;
+            DOM.popup.classList.add('active');
+            playSound('success');
+        }
+
+        function loadLevel(levelId) {
+            const level = gameData.levels.find(l => l.id === levelId);
+            if (!level) return;
+            
+            gameState.currentLevel = levelId;
+            updateStats();
+            
+            let content = '';
+            
+            switch(level.type) {
+                case 'memory':
+                    content = `
+                        <h2 class="content-title">${level.title} 🧩</h2>
+                        <p style="text-align: center; margin-bottom: 30px;">Temukan pasangan emoji! ${gameState.memoryPairsFound}/4</p>
+                        <div class="memory-game" id="memoryGame">
+                            ${[...level.pairs, ...level.pairs]
+                                .sort(() => Math.random() - 0.5)
+                                .map((pair, index) => `
+                                    <div class="memory-card" data-id="${pair.id}" data-index="${index}">
+                                        <div class="memory-card-front">?</div>
+                                        <div class="memory-card-back">${pair.emoji}</div>
+                                    </div>
+                                `).join('')}
+                        </div>
+                    `;
+                    break;
+                    
+                case 'quiz':
+                    const currentQuestion = level.questions[gameState.quizAnswers] || level.questions[0];
+                    content = `
+                        <h2 class="content-title">${level.title} ❓</h2>
+                        <p style="text-align: center; margin-bottom: 30px;">${gameState.quizAnswers}/${level.questions.length}</p>
+                        <div class="quiz-container">
+                            <div class="quiz-question">
+                                <h3 style="margin-bottom: 15px; color: var(--pink-secondary);">${currentQuestion.question}</h3>
+                            </div>
+                            <div class="quiz-options" id="quizOptions">
+                                ${currentQuestion.options.map((option, index) => `
+                                    <div class="quiz-option" data-answer="${index}">${option}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'collect':
+                    content = `
+                        <h2 class="content-title">${level.title} 🎁</h2>
+                        <p style="text-align: center; margin-bottom: 30px;">Kumpulkan semua hadiah! ${gameState.collectiblesFound || 0}/${level.count}</p>
+                        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                            ${Array.from({length: level.count}, (_, i) => `
+                                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--pink-light), var(--blue-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; transition: all 0.3s;" class="collectible-item" data-index="${i}">
+                                    ${i < (gameState.collectiblesFound || 0) ? '🎁' : '?'}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    break;
+                    
+                case 'messages':
+                    content = `
+                        <h2 class="content-title">${level.title} 💌</h2>
+                        <p style="text-align: center; margin-bottom: 30px;">Buka pesan! ${gameState.messagesOpened || 0}/${level.messages.length}</p>
+                        <div style="max-width: 600px; margin: 0 auto;">
+                            ${level.messages.map((msg, index) => `
+                                <div style="background: var(--pink-light); padding: 20px; margin-bottom: 15px; border-radius: 15px; cursor: pointer; transition: all 0.3s;" class="message-item" data-index="${index}">
+                                    <h3 style="color: var(--pink-secondary); margin-bottom: 10px;">${msg.title}</h3>
+                                    <p style="color: var(--text-secondary);">${msg.text}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    break;
+            }
+            
+            DOM.gameContent.innerHTML = content;
+            setupLevelInteractions(level);
+        }
+
+        function setupLevelInteractions(level) {
+            switch(level.type) {
+                case 'memory':
+                    setupMemoryGame();
+                    break;
+                case 'quiz':
+                    setupQuizGame();
+                    break;
+                case 'collect':
+                    setupCollectGame();
+                    break;
+                case 'messages':
+                    setupMessagesGame();
+                    break;
+            }
+        }
+
+        function setupMemoryGame() {
+            let flippedCards = [];
+            let canFlip = true;
+            
+            document.querySelectorAll('.memory-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    if (!canFlip || card.classList.contains('flipped') || flippedCards.length >= 2) return;
+                    
+                    playSound('click');
+                    card.classList.add('flipped');
+                    flippedCards.push(card);
+                    
+                    if (flippedCards.length === 2) {
+                        canFlip = false;
+                        const id1 = flippedCards[0].dataset.id;
+                        const id2 = flippedCards[1].dataset.id;
+                        
+                        if (id1 === id2) {
+                            setTimeout(() => {
+                                flippedCards.forEach(c => c.style.visibility = 'hidden');
+                                gameState.memoryPairsFound++;
+                                addScore(25);
+                                
+                                if (gameState.memoryPairsFound >= 4) {
+                                    completeLevel();
+                                }
+                                
+                                flippedCards = [];
+                                canFlip = true;
+                            }, 500);
+                        } else {
+                            setTimeout(() => {
+                                flippedCards.forEach(c => c.classList.remove('flipped'));
+                                flippedCards = [];
+                                canFlip = true;
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        }
+
+        function setupQuizGame() {
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const answer = parseInt(this.dataset.answer);
+                    const level = gameData.levels.find(l => l.id === gameState.currentLevel);
+                    const currentQuestion = level.questions[gameState.quizAnswers];
+                    
+                    playSound('click');
+                    
+                    if (answer === currentQuestion.correct) {
+                        this.classList.add('correct');
+                        gameState.quizAnswers++;
+                        addScore(50);
+                        
+                        if (gameState.quizAnswers >= level.questions.length) {
+                            setTimeout(() => completeLevel(), 1000);
+                        } else {
+                            setTimeout(() => loadLevel(gameState.currentLevel), 1500);
+                        }
+                    } else {
+                        this.classList.add('wrong');
+                    }
+                    
+                    document.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                    });
+                });
+            });
+        }
+
+        function setupCollectGame() {
+            document.querySelectorAll('.collectible-item').forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    if (this.textContent === '🎁') return;
+                    
+                    playSound('click');
+                    this.textContent = '🎁';
+                    gameState.collectiblesFound = (gameState.collectiblesFound || 0) + 1;
+                    addScore(30);
+                    
+                    const level = gameData.levels.find(l => l.id === gameState.currentLevel);
+                    if (gameState.collectiblesFound >= level.count) {
+                        setTimeout(() => completeLevel(), 500);
+                    }
+                });
+            });
+        }
+
+        function setupMessagesGame() {
+            document.querySelectorAll('.message-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    playSound('click');
+                    this.style.background = 'var(--yellow)';
+                    gameState.messagesOpened = (gameState.messagesOpened || 0) + 1;
+                    addScore(40);
+                    
+                    const level = gameData.levels.find(l => l.id === gameState.currentLevel);
+                    if (gameState.messagesOpened >= level.messages.length) {
+                        setTimeout(() => completeLevel(), 1000);
+                    }
+                });
+            });
+        }
+
+        function completeLevel() {
+            if (!gameState.completedLevels.includes(gameState.currentLevel)) {
+                gameState.completedLevels.push(gameState.currentLevel);
+            }
+            
+            if (gameState.currentLevel === 1) gameState.memoryPairsFound = 0;
+            if (gameState.currentLevel === 2) gameState.quizAnswers = 0;
+            if (gameState.currentLevel === 3) gameState.collectiblesFound = 0;
+            if (gameState.currentLevel === 4) gameState.messagesOpened = 0;
+            
+            const rewards = [0, 50, 100, 150, 200];
+            showPopup("🎉", "Level Selesai!", `Selamat! +${rewards[gameState.currentLevel]} Poin Cinta!`);
+            
+            if (gameState.completedLevels.length === 4) {
+                setTimeout(() => {
+                    showPopup("🏆", "SELAMAT!", "Kamu menyelesaikan semua level! Cinta kita abadi selamanya! 💖");
+                }, 2000);
+            }
+            
+            updateStats();
+        }
+
+        // Event Listeners
+        DOM.prevBtn.addEventListener('click', () => {
+            if (gameState.currentLevel > 1) {
+                playSound('click');
+                loadLevel(gameState.currentLevel - 1);
+            }
+        });
+
+        DOM.nextBtn.addEventListener('click', () => {
+            if (gameState.currentLevel < 4 && gameState.completedLevels.includes(gameState.currentLevel)) {
+                playSound('click');
+                loadLevel(gameState.currentLevel + 1);
+            }
+        });
+
+        DOM.hintBtn.addEventListener('click', () => {
+            playSound('click');
+            const hints = ["Coba klik!", "Jangan menyerah!", "Kamu pasti bisa!", "Semangat!", "Aku percaya padamu!"];
+            showPopup("💡", "Petunjuk", hints[Math.floor(Math.random() * hints.length)]);
+        });
+
+        DOM.popupBtn.addEventListener('click', () => {
+            playSound('click');
+            DOM.popup.classList.remove('active');
+            if (gameState.currentLevel < 4 && gameState.completedLevels.includes(gameState.currentLevel)) {
+                loadLevel(gameState.currentLevel + 1);
+            }
+        });
+
+        DOM.popup.addEventListener('click', (e) => {
+            if (e.target === DOM.popup) {
+                DOM.popup.classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.level-card:not(.locked)').forEach(card => {
+            card.addEventListener('click', function() {
+                const level = parseInt(this.dataset.level);
+                if (level <= gameState.currentLevel || gameState.completedLevels.includes(level - 1)) {
+                    playSound('click');
+                    loadLevel(level);
+                }
+            });
+        });
+
+        // Initialize
+        function init() {
+            updateStats();
+            loadLevel(1);
+            setTimeout(() => {
+                showPopup("🎮", "Selamat Datang!", "Selesaikan semua level untuk hadiah spesial! 💖");
+            }, 500);
+        }
+
+        // ===== MUSIC PLAYER INTERACTION =====
+        const musicData = {
+            1: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            2: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+            3: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+        };
+
+        const musicBtns = document.querySelectorAll('.music-btn');
+        const muteBtn = document.getElementById('muteBtn');
+        const progressBar = document.getElementById('progressBar');
+        const musicTime = document.getElementById('musicTime');
+        const musicProgress = document.querySelector('.music-progress');
+
+        // Initialize music player state
+        function updateMusicUI() {
+            const currentSong = localStorage.getItem('selectedSong');
+            musicBtns.forEach(btn => {
+                if (btn.dataset.song === currentSong) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Music button click handlers
+        musicBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songNum = this.dataset.song;
+                const currentlyPlaying = localStorage.getItem('selectedSong');
+                
+                // Only change song if different one is selected
+                if (currentlyPlaying !== songNum) {
+                    localStorage.setItem('selectedSong', songNum);
+                    
+                    if (window.globalAudioPlayer) {
+                        window.globalAudioPlayer.src = musicData[songNum];
+                        window.globalAudioPlayer.currentTime = 0;
+                        const isMuted = localStorage.getItem('musicMuted') === 'true';
+                        if (!isMuted) {
+                            window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                        }
+                    }
+                }
+                updateMusicUI();
+            });
+        });
+
+        // Mute button handler
+        muteBtn.addEventListener('click', function() {
+            const isMuted = localStorage.getItem('musicMuted') === 'true';
+            localStorage.setItem('musicMuted', !isMuted);
+            
+            if (window.globalAudioPlayer) {
+                if (!isMuted) {
+                    window.globalAudioPlayer.pause();
+                    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else {
+                    window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+            }
+        });
+
+        // Update music progress - check if listener already exists
+        if (window.globalAudioPlayer && !window.globalAudioPlayer._timeupdate) {
+            window.globalAudioPlayer._timeupdate = true;
+            window.globalAudioPlayer.addEventListener('timeupdate', function() {
+                const progressBars = document.querySelectorAll('.progress-bar');
+                const musicTimes = document.querySelectorAll('.music-time');
+                
+                if (this.duration) {
+                    const percent = (this.currentTime / this.duration) * 100;
+                    progressBars.forEach(bar => {
+                        bar.style.width = percent + '%';
+                    });
+                    
+                    const minutes = Math.floor(this.currentTime / 60);
+                    const seconds = Math.floor(this.currentTime % 60);
+                    const timeStr = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                    musicTimes.forEach(time => {
+                        time.textContent = timeStr;
+                    });
+                }
+            });
+        }
+        
+        // Update progress bar and time from current page's elements
+        if (window.globalAudioPlayer) {
+            window.globalAudioPlayer.addEventListener('timeupdate', function() {
+                if (this.duration && progressBar) {
+                    const percent = (this.currentTime / this.duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    const minutes = Math.floor(this.currentTime / 60);
+                    const seconds = Math.floor(this.currentTime % 60);
+                    musicTime.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                }
+            });
+        }
+
+        // Music progress click handler
+        musicProgress.addEventListener('click', function(e) {
+            if (window.globalAudioPlayer && window.globalAudioPlayer.duration) {
+                const rect = this.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                window.globalAudioPlayer.currentTime = percent * window.globalAudioPlayer.duration;
+            }
+        });
+
+        // Update UI on load
+        updateMusicUI();
+
+        // Update mute button state
+        const isMuted = localStorage.getItem('musicMuted') === 'true';
+        if (isMuted) {
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        }
+
+        init();
+    </script>
+</body>
+</html>

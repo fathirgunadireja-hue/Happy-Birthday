@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Cinta | Selamat Ulang Tahun</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .messages-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .message-card {
+            background: var(--white-transparent);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--pink-primary);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-card:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .message-card::before {
+            content: '💌';
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .message-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--pink-light), var(--blue-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message-title {
+            font-size: 1.5rem;
+            color: var(--pink-secondary);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .message-time {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .message-content {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .message-action-btn {
+            background: var(--pink-light);
+            border: none;
+            color: var(--pink-secondary);
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .message-action-btn:hover {
+            background: var(--pink-primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .reaction-counter {
+            display: inline-block;
+            background: var(--yellow);
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .special-message {
+            background: linear-gradient(135deg, rgba(255, 155, 214, 0.2), rgba(123, 198, 255, 0.2));
+            border-left-color: var(--yellow);
+            border: 2px solid var(--yellow);
+        }
+
+        .special-message .message-icon {
+            background: linear-gradient(135deg, var(--yellow), var(--pink-primary));
+        }
+
+        .love-level {
+            display: inline-block;
+            color: var(--pink-secondary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .intro-section {
+            background: var(--white-transparent);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .intro-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .love-meter {
+            background: var(--gray-light);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+            border: 2px solid var(--pink-primary);
+        }
+
+        .love-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--pink-primary), var(--red), var(--pink-secondary));
+            width: 100%;
+            animation: fillMeter 2s ease-in-out infinite;
+        }
+
+        @keyframes fillMeter {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 100%; }
+        }
+
+        /* ===== MUSIC PLAYER ===== */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            z-index: 1500;
+            max-width: 280px;
+            animation: slideInRight 0.5s ease;
+            border: 2px solid #ff9cd6;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .music-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: #ff6b9d;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .music-header i {
+            font-size: 1.2rem;
+        }
+
+        .music-title {
+            font-size: 0.95rem;
+        }
+
+        .music-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .music-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ffd6ec;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .music-btn i {
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            flex-shrink: 0;
+        }
+
+        .music-btn:hover {
+            background: linear-gradient(135deg, #ffe0f0, #ffd6ec);
+            border-color: #ff9cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+        }
+
+        .music-btn.active {
+            background: linear-gradient(135deg, #ff9cd6, #ffc0da);
+            border-color: #ff6b9d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .music-btn.active i {
+            color: white;
+        }
+
+        .music-btn.active .music-name,
+        .music-btn.active .music-duration {
+            color: white;
+        }
+
+        .music-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .music-name {
+            font-weight: 700;
+            color: #2d2d2d;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-duration {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            color: #7e5a7b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-btn:hover .music-name {
+            color: #ff3366;
+        }
+
+        .music-btn.active .music-duration {
+            opacity: 0.9;
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #ffd6ec;
+        }
+
+        .music-control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #ff6b9d;
+            padding: 5px;
+            transition: all 0.2s;
+        }
+
+        .music-control-btn:hover {
+            transform: scale(1.2);
+            color: #ff3366;
+        }
+
+        .music-progress {
+            flex: 1;
+            height: 4px;
+            background: #ffd6ec;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff6b9d, #ff9cd6);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .music-time {
+            font-size: 0.75rem;
+            color: #7e5a7b;
+            font-weight: 600;
+            min-width: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .music-player {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: unset;
+            }
+
+            .music-options {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .music-btn {
+                padding: 10px 12px;
+            }
+
+            .music-btn i {
+                font-size: 1rem;
+            }
+
+            .music-name {
+                font-size: 0.85rem;
+            }
+
+            .music-duration {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MUSIC PLAYER -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <i class="fas fa-music"></i>
+            <span class="music-title">Pilih Musik Favorit Kita</span>
+        </div>
+        <div class="music-options">
+            <button class="music-btn" data-song="1">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Lagu Cinta 💕</div>
+                    <div class="music-duration">Romantic Vibes</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="2">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Senyuman Kamu 😊</div>
+                    <div class="music-duration">Happy Feels</div>
+                </div>
+            </button>
+            <button class="music-btn" data-song="3">
+                <i class="fas fa-compact-disc"></i>
+                <div class="music-info">
+                    <div class="music-name">Selamanya Kamu 💑</div>
+                    <div class="music-duration">Forever Mood</div>
+                </div>
+            </button>
+        </div>
+        <div class="music-controls">
+            <button class="music-control-btn" id="muteBtn" title="Mute/Unmute">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="music-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="music-time" id="musicTime">0:00</span>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#/home" class="navbar-brand">
+                <span>🎂</span> Happy Birthday
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="#/home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#/game.html"><i class="fas fa-gamepad"></i> Game</a></li>
+                <li><a href="#/gallery.html"><i class="fas fa-images"></i> Galeri</a></li>
+                <li><a href="#/messages.html" class="active"><i class="fas fa-envelope"></i> Pesan</a></li>
+                <li><a href="#/timeline.html"><i class="fas fa-heart"></i> Timeline</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">💌 Love Notes dari Aku 💌</h1>
+        <p class="page-subtitle">Siapa sih yang bisa menolak 5 pesan cinta dari gebetan sendiri? 😏💕</p>
+
+        <!-- Intro Section -->
+        <div class="intro-section">
+            <div class="intro-emoji">💖</div>
+            <p class="intro-text">
+                Aku mau dierasin dulu sebelum baca semuanya: Kamu adalah hal paling menyebalkan dan terbaik dalam hidup aku. Menyebalkan karena selalu bikin aku ketawa sampai perut sakit, tapi terbaik karena... well, kamu tahu lah 😌❤️
+            </p>
+            <p class="intro-text">
+                Rating cinta aku untuk kamu:
+            </p>
+            <div class="love-meter">
+                <div class="love-fill"></div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container">
+            <!-- Message 1 -->
+            <div class="message-card">
+                <div class="message-header">
+                    <div class="message-icon">❤️</div>
+                    <div>
+                        <h3 class="message-title">Aku Cinta Kamu Karena... 🤷‍♀️</h3>
+                        <p class="message-time">Ditulis sambil tersenyum menyebalkan</p>
+                    </div>
+                </div>
+                <div class="message-content">
+                    "Aku cinta kamu karena cara kamu melihatku seperti aku ini istimewa, padahal kamu lebih istimewa. Aku cinta kamu karena kamu bikin aku tertawa sampai pelupuk mata aku ngilu. Tapi yang paling bikin aku cinta adalah... karena kamu itu kamu, dan tidak ada yang bisa mengganti itu. Point blank! 💋"
+                </div>
+                <div class="message-actions">
+                    <button class="message-action-btn">
+                        <i class="fas fa-heart"></i> Suka
+                    </button>
+                    <button class="message-action-btn">
+                        <i class="fas fa-comment"></i> Balas
+                    </button>
+                    <div class="reaction-counter">❤️ 999+</div>
+                </div>
+            </div>
+
+            <!-- Message 2 -->
+            <div class="message-card">
+                <div class="message-header">
+                    <div class="message-icon">🌟</div>
+                    <div>
+                        <h3 class="message-title">Top 3 Hal Paling Nyebelin Tentang Kamu 😤</h3>
+                        <p class="message-time">Tapi paling aku sayangin</p>
+                    </div>
+                </div>
+                <div class="message-content">
+                    "Pertama: Cara kamu terlihat cantik tanpa usaha keras. Gaara! Aku harus sadar diri. Kedua: Kamu bisa bikin aku ketawa di saat paling gawat. Itu curang banget! Dan ketiga: Cara kamu cinta aku dengan 100% hati nurani, tanpa kompromi. Itu yang paling nyebelin karena aku jadi merasa guilty kalau aku tidak memberikan yang sama. Tapi thanks ya udah ngajarin aku gimana caranya cinta yang beneran. 🥺💖"
+                </div>
+                <div class="message-actions">
+                    <button class="message-action-btn">
+                        <i class="fas fa-heart"></i> Suka
+                    </button>
+                    <button class="message-action-btn">
+                        <i class="fas fa-comment"></i> Balas
+                    </button>
+                    <div class="reaction-counter">❤️ 888</div>
+                </div>
+            </div>
+
+            <!-- Message 3 -->
+            <div class="message-card">
+                <div class="message-header">
+                    <div class="message-icon">🎂</div>
+                    <div>
+                        <h3 class="message-title">Masa Depan Kita (Spoiler Alert! ⚠️)</h3>
+                        <p class="message-time">Rencana rahasia yang udah aku pikirin</p>
+                    </div>
+                </div>
+                <div class="message-content">
+                    "Aku ingin terus nyebelin kamu sampai kita tua. Aku ingin teman tidurku selamanya adalah kamu (dan juga kucing kalau kita adopt 😹). Aku ingin masa depan kita penuh dengan tawa, petualangan, dan mungkin sedikit drama (tapi yang lucu ya, bukan yang serius!). Yang paling penting, aku ingin setiap hari bangun dan lihat wajah bahagia kamu, tahu bahwa aku adalah alasan kamu tersenyum. Kamu mau nggak? 👉👈💕"
+                </div>
+                <div class="message-actions">
+                    <button class="message-action-btn">
+                        <i class="fas fa-heart"></i> Suka
+                    </button>
+                    <button class="message-action-btn">
+                        <i class="fas fa-comment"></i> Balas
+                    </button>
+                    <div class="reaction-counter">❤️ 777</div>
+                </div>
+            </div>
+
+            <!-- Message 4 - Special -->
+            <div class="message-card special-message">
+                <div class="message-header">
+                    <div class="message-icon">💎</div>
+                    <div>
+                        <h3 class="message-title">✨ THE FINAL MESSAGE - Jangan Nangis Ya! ✨</h3>
+                        <p class="message-time">Dari hati yang menderita tapi bahagia 🥺</p>
+                    </div>
+                </div>
+                <div class="message-content">
+                    "Di hari istimewamu ini, aku hanya ingin bilang ini: Terima kasih sudah memilih untuk tahan dengan segala keanehan aku. Terima kasih karena selalu ada, bahkan di saat aku sedang jadi versi terburuk dari diriku. Terima kasih karena cinta kamu membuat aku percaya bahwa aku bisa jadi seseorang yang lebih baik. Dan yang paling penting, terima kasih karena kamu adalah kamu. Happy Birthday to the love of my life! You deserve all the happiness in the world, and I promise to make you smile every single day. I love you more than anything. Forever yours. <span class=\"love-level\">∞</span>"
+                </div>
+                <div class="message-actions">
+                    <button class="message-action-btn">
+                        <i class="fas fa-heart"></i> Suka
+                    </button>
+                    <button class="message-action-btn">
+                        <i class="fas fa-comment"></i> Balas
+                    </button>
+                    <div class="reaction-counter">💖 ∞</div>
+                </div>
+            </div>
+
+            <!-- Message 5 -->
+            <div class="message-card">
+                <div class="message-header">
+                    <div class="message-icon">🌹</div>
+                    <div>
+                        <h3 class="message-title">P.S. (Post Script yang Penting!)</h3>
+                        <p class="message-time">Bonus content karena aku gitu orangnya</p>
+                    </div>
+                </div>
+                <div class="message-content">
+                    "Jangan lupa untuk celebrate harimu dengan proper! Makan makanan enak, ajak teman-teman kamu, atau tidur sampai siang (yang aku rasa lebih penting 😴). Tapi yang paling penting: tahu nggak kalau kamu adalah birthday present terbaik untuk diriku sendiri? Serius! Thankyou for existing, for being amazing, and for loving me back. You're the best! 🎉💖"
+                </div>
+                <div class="message-actions">
+                    <button class="message-action-btn">
+                        <i class="fas fa-heart"></i> Suka
+                    </button>
+                    <button class="message-action-btn">
+                        <i class="fas fa-comment"></i> Balas
+                    </button>
+                    <div class="reaction-counter">❤️ 666</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Dibuat dengan <span class="heart-animation">❤️</span> penuh cinta untuk merayakan hari spesialmu!</p>
+        <p style="margin-top: 10px; color: var(--pink-secondary); font-weight: 600;">Selamat Ulang Tahun Sayang! 🎂✨</p>
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        document.querySelectorAll('.message-action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const icon = this.querySelector('i').className;
+                
+                if (icon.includes('fa-heart')) {
+                    this.style.background = 'var(--pink-primary)';
+                    this.style.color = 'white';
+                    this.textContent = '❤️ Sudah Disukai';
+                    this.disabled = true;
+                } else if (icon.includes('fa-comment')) {
+                    alert('Balasan akan ditambahkan di versi mendatang! 💌');
+                }
+            });
+        });
+
+        // ===== MUSIC PLAYER INTERACTION =====
+        const musicData = {
+            1: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            2: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+            3: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+        };
+
+        const musicBtns = document.querySelectorAll('.music-btn');
+        const muteBtn = document.getElementById('muteBtn');
+        const progressBar = document.getElementById('progressBar');
+        const musicTime = document.getElementById('musicTime');
+        const musicProgress = document.querySelector('.music-progress');
+
+        function updateMusicUI() {
+            const currentSong = localStorage.getItem('selectedSong');
+            musicBtns.forEach(btn => {
+                if (btn.dataset.song === currentSong) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        musicBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songNum = this.dataset.song;
+                const currentlyPlaying = localStorage.getItem('selectedSong');
+                
+                // Only change song if different one is selected
+                if (currentlyPlaying !== songNum) {
+                    localStorage.setItem('selectedSong', songNum);
+                    
+                    if (window.globalAudioPlayer) {
+                        window.globalAudioPlayer.src = musicData[songNum];
+                        window.globalAudioPlayer.currentTime = 0;
+                        const isMuted = localStorage.getItem('musicMuted') === 'true';
+                        if (!isMuted) {
+                            window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                        }
+                    }
+                }
+                updateMusicUI();
+            });
+        });
+
+        muteBtn.addEventListener('click', function() {
+            const isMuted = localStorage.getItem('musicMuted') === 'true';
+            localStorage.setItem('musicMuted', !isMuted);
+            
+            if (window.globalAudioPlayer) {
+                if (!isMuted) {
+                    window.globalAudioPlayer.pause();
+                    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else {
+                    window.globalAudioPlayer.play().catch(e => console.log('Play error:', e));
+                    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+            }
+        });
+
+        if (window.globalAudioPlayer) {
+            window.globalAudioPlayer.addEventListener('timeupdate', function() {
+                if (this.duration) {
+                    const percent = (this.currentTime / this.duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    const minutes = Math.floor(this.currentTime / 60);
+                    const seconds = Math.floor(this.currentTime % 60);
+                    musicTime.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                }
+            });
+        }
+
+        musicProgress.addEventListener('click', function(e) {
+            if (window.globalAudioPlayer && window.globalAudioPlayer.duration) {
+                const rect = this.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                window.globalAudioPlayer.currentTime = percent * window.globalAudioPlayer.duration;
+            }
+        });
+
+        updateMusicUI();
+        const isMuted = localStorage.getItem('musicMuted') === 'true';
+        if (isMuted) {
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        }
+    </script>
+</body>
+</html>
