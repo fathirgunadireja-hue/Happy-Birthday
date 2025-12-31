@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Emoji Windows fix - gunakan multiple fonts untuk coverage maksimal */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+        
+        body, * {
+            font-family: 'Comic Neue', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', system-ui, sans-serif;
+        }
+        
         /* Foto kue ulang tahun bulat */
         .cake-photo,
         .gallery-cake-photo,
@@ -43,7 +50,7 @@
     <div class="music-player" id="musicPlayer">
         <div class="music-header">
             <i class="fas fa-music"></i>
-            <span class="music-title">Pilih Musik yaa!!</span>
+            <span class="music-title">Putar Musik Yaa!!</span>
             <button class="music-close" id="musicClose" title="Kecilkan">&times;</button>
         </div>
         <div class="music-options">
@@ -86,8 +93,8 @@
                 <i class="fas fa-lock"></i>
             </div>
             
-            <h1 class="password-title">🔐Kode Akses🔐</h1>
-            <p class="password-subtitle">hihii, tebakk yaa passwordnyaa!!💕</p>
+            <h1 class="password-title">🔐 Kode Akses 🔐</h1>
+            <p class="password-subtitle">hihii, tebakk yaa passwordnyaa!! 💕</p>
             
             <div class="password-input-group">
                 <label class="password-label">Kode Akses (4 digit):</label>

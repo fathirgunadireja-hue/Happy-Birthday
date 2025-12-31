@@ -26,7 +26,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Comic Neue', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Comic Neue', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', system-ui, sans-serif;
 }
 
 html, body {
@@ -43,6 +43,34 @@ body {
     padding: 0;
     line-height: 1.6;
     position: relative;
+    font-family: 'Comic Neue', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', system-ui, sans-serif;
+}
+
+/* Emoji support untuk semua elemen - force color emoji rendering */
+.nav-card-icon,
+.level-icon,
+.modal-image,
+.gallery-emoji,
+.birthday-animation,
+.romantic-emoji,
+.password-title,
+.password-hint,
+.game-title,
+.game-subtitle,
+.page-title,
+.page-subtitle,
+.message-title,
+.message-content,
+.main-title,
+.subtitle,
+.nav-card-desc,
+.timeline-title,
+.journey-title {
+    font-family: 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Symbol', system-ui, sans-serif !important;
+    color: inherit !important;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: subpixel-antialiased !important;
+    -moz-osx-font-smoothing: auto !important;
 }
 
 main {
