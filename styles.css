@@ -208,6 +208,38 @@ a {
     color: var(--pink-secondary);
 }
 
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 101;
+}
+
+.hamburger span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: var(--pink-secondary);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -330,31 +362,103 @@ a {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .page-title {
-        font-size: 2rem;
+        font-size: 2.5rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
+    }
+
+    .hamburger {
+        display: flex;
     }
 
     .navbar-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        padding: 80px 30px 30px;
         gap: 15px;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        z-index: 100;
+    }
+    
+    .navbar-menu.active {
+        right: 0;
     }
 
     .navbar-menu a {
-        padding: 6px 10px;
-        font-size: 0.9rem;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        width: 100%;
     }
 
     .container {
-        padding: 20px 15px 150px 15px;
+        padding: 30px 15px 120px 15px;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .nav-buttons {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .nav-card {
+        padding: 25px;
+    }
+    
+    .nav-card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .nav-card-title {
+        font-size: 1.3rem;
+    }
+    
+    .password-box {
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+    
+    .password-title {
+        font-size: 1.8rem;
+    }
+    
+    .password-buttons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .password-num-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+    
+    .music-player {
+        bottom: 10px;
+        right: 10px;
+        max-width: 250px;
+        padding: 12px;
     }
 }
 
 @media (max-width: 600px) {
     .container {
-        padding: 20px 15px 200px 15px;
-    }
-
-    .navbar-menu {
-        flex-direction: column;
-        gap: 8px;
+        padding: 20px 10px 100px 10px;
     }
 
     .navbar-brand {
@@ -362,7 +466,67 @@ a {
     }
 
     .page-title {
-        font-size: 1.8rem;
+        font-size: 2rem;
+    }
+    
+    .main-title {
+        font-size: 1.7rem;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .nav-card-icon {
+        font-size: 2rem;
+    }
+    
+    .nav-card-title {
+        font-size: 1.2rem;
+    }
+    
+    .nav-card-desc {
+        font-size: 0.85rem;
+    }
+    
+    .password-input-wrapper {
+        gap: 8px;
+    }
+    
+    .password-digit {
+        width: 45px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .password-num-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .password-action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .password-delete-btn,
+    .password-submit-btn {
+        width: 100%;
+    }
+    
+    .music-player {
+        max-width: 220px;
+        padding: 10px;
+    }
+    
+    .music-header {
+        font-size: 0.85rem;
+    }
+    
+    .music-btn {
+        padding: 10px 12px;
+        font-size: 0.8rem;
     }
 }
 

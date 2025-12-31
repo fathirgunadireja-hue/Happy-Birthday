@@ -135,7 +135,12 @@
             <a href="#/home" class="navbar-brand">
                 <span>🎂</span> Happy Birthday
             </a>
-            <ul class="navbar-menu">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="navbar-menu" id="navbarMenu">
                 <li><a href="#/home"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="#/game.html"><i class="fas fa-gamepad"></i> Game</a></li>
                 <li><a href="#/gallery.html"><i class="fas fa-images"></i> Galeri</a></li>
@@ -746,6 +751,25 @@
         
         // Create additional confetti every few seconds
         setInterval(createConfetti, 5000);
+        
+        // Hamburger menu toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navbarMenu = document.getElementById('navbarMenu');
+        
+        if (hamburgerBtn && navbarMenu) {
+            hamburgerBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navbarMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking a link
+            navbarMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburgerBtn.classList.remove('active');
+                    navbarMenu.classList.remove('active');
+                });
+            });
+        }
     </script>
 </body>
 </html>
