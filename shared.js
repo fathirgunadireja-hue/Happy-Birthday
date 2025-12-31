@@ -99,6 +99,7 @@ function initializeMusicPlayer() {
         window.globalAudioPlayer.loop = true; // putar berulang terus
         window.globalAudioPlayer.autoplay = true;
         window.globalAudioPlayer.playsInline = true;
+        window.globalAudioPlayer.muted = false;
         // Hapus pengaturan crossOrigin untuk sumber lokal
     }
 
@@ -113,6 +114,10 @@ function initializeMusicPlayer() {
     const savedUrl = localStorage.getItem('musicUrl');
     // Sinkronkan status mute dengan yang tersimpan
     window.globalAudioPlayer.muted = savedMuted === 'true';
+    // Pastikan volume tidak nol
+    if (window.globalAudioPlayer.volume === 0) {
+        window.globalAudioPlayer.volume = 0.6;
+    }
 
     // Set sumber sederhana ke file lokal
     const url = musicData[songId];
@@ -135,7 +140,9 @@ function initializeMusicPlayer() {
         }
 
         const tryPlay = () => {
-            if (!window.globalAudioPlayer || window.globalAudioPlayer.muted) return;
+            if (!window.globalAudioPlayer) return;
+            window.globalAudioPlayer.muted = false;
+            if (window.globalAudioPlayer.volume === 0) window.globalAudioPlayer.volume = 0.6;
             window.globalAudioPlayer.play().catch(() => {});
         };
 
@@ -146,7 +153,11 @@ function initializeMusicPlayer() {
         }
 
         // Pastikan pemutaran dimulai saat ada interaksi pengguna (untuk melewati blokir autoplay)
-        const unlockAudio = () => { tryPlay(); };
+        const unlockAudio = () => {
+            window.globalAudioPlayer.muted = false;
+            if (window.globalAudioPlayer.volume === 0) window.globalAudioPlayer.volume = 0.6;
+            tryPlay();
+        };
         document.addEventListener('pointerdown', unlockAudio, { once: true });
         document.addEventListener('click', unlockAudio, { once: true });
         document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
