@@ -271,6 +271,7 @@
             padding-top: 20px;
             border-top: 2px solid rgba(255, 155, 214, 0.18);
             font-family: 'Poppins', sans-serif;
+            display: none;
         }
 
         /* Message Section */
@@ -727,7 +728,7 @@
             </div>
 
             <div class="current-time">
-                Current time: <span id="currentTime">--:-- WIB</span>
+                Today: <span id="currentTime">-- --- ----</span>
             </div>
         </div>
 
@@ -1029,10 +1030,14 @@
             minutesEl.textContent = String(minutes).padStart(2, '0');
             secondsEl.textContent = String(seconds).padStart(2, '0');
 
-            // Update current time
-            const hours24 = String(jakartaTime.getHours()).padStart(2, '0');
-            const mins = String(jakartaTime.getMinutes()).padStart(2, '0');
-            currentTimeEl.textContent = `${hours24}:${mins} WIB`;
+            // Update current date and time
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const date = jakartaTime.getDate();
+            const month = months[jakartaTime.getMonth()];
+            const year = jakartaTime.getFullYear();
+            if (currentTimeEl) {
+                currentTimeEl.textContent = `${date} ${month} ${year}`;
+            }
         }
 
         // Initial update
