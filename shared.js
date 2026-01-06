@@ -63,6 +63,33 @@ function observeAnimatedElements(root = document) {
     });
 }
 
+// Helper function to create floating emojis for background animation
+function createFloatingEmojis(containerOrId) {
+    const emojis = ['⭐', '✨', '🌟', '💫', '⭐', '✨', '🌟', '💫'];
+    
+    // Support both element and ID
+    const container = typeof containerOrId === 'string' 
+        ? document.getElementById(containerOrId) 
+        : containerOrId;
+    
+    if (!container) return;
+    
+    // Clear existing emojis
+    container.innerHTML = '';
+    
+    // Create 20 floating emojis
+    for (let i = 0; i < 20; i++) {
+        const emoji = document.createElement('div');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + '%';
+        emoji.style.top = Math.random() * 100 + '%';
+        emoji.style.animationDelay = Math.random() * 6 + 's';
+        emoji.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
+        container.appendChild(emoji);
+    }
+}
+
 // Initial observe
 observeAnimatedElements(document);
 
@@ -255,7 +282,53 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMusicPlayer();
     bindMusicUI();
     bindMusicMinimizeUI();
+    removeBackgroundFromStickers();
 });
+
+// Function to remove black background from sticker images
+function removeBackgroundFromStickers() {
+    const stickers = [
+        { canvas: 'stickerCanvas1', img: 'foto/hajarstiker/hajarlucu2.jpeg' },
+        { canvas: 'stickerCanvas2', img: 'foto/hajarstiker/hajarlucu1.jpeg' }
+    ];
+    
+    stickers.forEach(sticker => {
+        const canvas = document.getElementById(sticker.canvas);
+        if (!canvas) return;
+        
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = function() {
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // Draw image on canvas
+            ctx.drawImage(img, 0, 0);
+            
+            // Get image data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            // Loop through pixels and remove dark colors
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                // If pixel is very dark (close to black), make it transparent
+                const brightness = (r + g + b) / 3;
+                if (brightness < 50) {
+                    data[i + 3] = 0; // Set alpha to 0
+                }
+            }
+            
+            // Put the modified image data back
+            ctx.putImageData(imageData, 0, 0);
+        };
+        img.src = sticker.img;
+    });
+}
 // Minimize/restore music player
 function bindMusicMinimizeUI() {
     const player = document.getElementById('musicPlayer');
@@ -379,6 +452,13 @@ function bindMusicMinimizeUI() {
                 if (clonedPage) {
                     clonedPage.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; left: auto !important; width: 100% !important;';
                     console.log('✅ Active page display fixed, clientHeight:', clonedPage.clientHeight);
+                    
+                    // Create floating emojis for the cloned section
+                    const bgAnimation = clonedPage.querySelector('.password-background-animation');
+                    if (bgAnimation) {
+                        console.log('✅ Creating floating emojis for cloned section');
+                        createFloatingEmojis(bgAnimation);
+                    }
                 } else {
                     console.warn('❌ Active page not found in spaView');
                 }
@@ -422,6 +502,40 @@ function bindMusicMinimizeUI() {
         const cardLink = e.target.closest('a.nav-card') || e.target.closest('nav a[href]');
         if (!cardLink) return;
         let href = cardLink.getAttribute('href') || '';
+        
+        // Check if card is locked
+        if (cardLink.classList.contains('locked-card')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const warningModal = document.getElementById('warningModal');
+            if (warningModal) {
+                warningModal.classList.add('active');
+            }
+            return false;
+        }
+        
+        // Check if navbar link points to locked section
+        if (href.startsWith('#/')) {
+            const pageToNavigate = href.substring(2);
+            const lockedPages = ['gallery.html', 'messages.html', 'timeline.html'];
+            
+            if (lockedPages.includes(pageToNavigate)) {
+                // Check game state
+                const savedState = localStorage.getItem('birthdayGameState');
+                const gameState = savedState ? JSON.parse(savedState) : { completedLevels: [] };
+                const isLevel4Complete = gameState.completedLevels && gameState.completedLevels.includes(4);
+                
+                if (!isLevel4Complete) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const warningModal = document.getElementById('warningModal');
+                    if (warningModal) {
+                        warningModal.classList.add('active');
+                    }
+                    return false;
+                }
+            }
+        }
         
         // Handle hash routing (#/page.html -> page.html, #/home -> home)
         if (href.startsWith('#/')) {
@@ -498,116 +612,91 @@ function bindMusicMinimizeUI() {
 // ===== PAGE INITIALIZERS =====
 
 function initGalleryPage() {
-    const memoryData = [
-        {
-            id: 1,
-            title: "Wisuda Bersama",
-            date: "15 Juni 2019",
-            emoji: "🎓",
-            description: "Hari kelulusan kita yang tak terlupakan. Aku masih ingat bagaimana kebahagiaan di mata kamu saat itu."
-        },
-        {
-            id: 2,
-            title: "Fajar di Pantai",
-            date: "23 Agustus 2020",
-            emoji: "🌅",
-            description: "Menonton fajar bersama dengan tangan yang saling bergenggam. Itu adalah momen paling romantis."
-        },
-        {
-            id: 3,
-            title: "Perayaan Ulang Tahun Pertama",
-            date: "12 Desember 2021",
-            emoji: "<img src='foto/almakki.jpeg' class='gallery-cake-photo'>",
-            description: "Kue pertama yang kita rayakan bersama. Setiap lilin yang aku tiup adalah doa untuk kita bisa selamanya bersama."
-        },
-        {
-            id: 4,
-            title: "Petualangan ke Bali",
-            date: "7 Februari 2022",
-            emoji: "✈️",
-            description: "Liburan pertama kita ke pulau yang indah. Setiap pantai yang kita kunjungi lebih bermakna karena kamu."
-        },
-        {
-            id: 5,
-            title: "Momen Intim Kita",
-            date: "14 Februari 2023",
-            emoji: "💑",
-            description: "Hari Valentine yang penuh dengan cinta dan kehangatan. Kamu adalah rumah bagiku."
-        },
-        {
-            id: 6,
-            title: "Pesta Kejutan",
-            date: "20 Mei 2023",
-            emoji: "🎪",
-            description: "Kejutan pesta yang aku rencanakan. Melihat kebahagiaan di wajahmu adalah saat-saat terbaik."
-        },
-        {
-            id: 7,
-            title: "Makan Malam Romantis",
-            date: "8 Agustus 2023",
-            emoji: "🍽️",
-            description: "Malam yang penuh dengan percakapan bermakna. Momen-momen sederhana dengan kamu adalah yang terbaik."
-        },
-        {
-            id: 8,
-            title: "Konser Musik Bersama",
-            date: "16 November 2023",
-            emoji: "🎭",
-            description: "Merasakan musik yang sama dengan jantung yang berdetak berirama sama."
-        },
-        {
-            id: 9,
-            title: "Piknik di Taman Bunga",
-            date: "22 Maret 2024",
-            emoji: "🌸",
-            description: "Dikelilingi oleh bunga-bunga indah, tapi yang paling indah adalah senyummu."
+    // Create confetti on gallery load
+    function createGalleryConfetti() {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-piece';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = confetti.style.width;
+        confetti.style.background = ['rgba(255, 107, 157, 0.8)', 'rgba(120, 150, 255, 0.8)', 'rgba(110, 210, 255, 0.8)', 'rgba(255, 140, 200, 0.8)'][Math.floor(Math.random() * 4)];
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        const gallerySection = document.getElementById('gallery-section');
+        if (gallerySection) {
+            gallerySection.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 3500);
         }
-    ];
+    }
 
-    const modal = document.getElementById('modal');
-    const modalClose = document.querySelector('.modal-close');
+    // Trigger confetti on load
+    createGalleryConfetti();
+    
+    // Create confetti every 5 seconds
+    const confettiInterval = setInterval(createGalleryConfetti, 5000);
+
     const galleryItems = document.querySelectorAll('.gallery-item');
 
-    if (!modal || !modalClose || galleryItems.length === 0) return;
-
-    galleryItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const id = parseInt(this.dataset.id);
-            const memory = memoryData.find(m => m.id === id);
-            if (!memory) return;
-
-            document.getElementById('modalImage').textContent = memory.emoji;
-            document.getElementById('modalTitle').textContent = memory.title;
-            document.getElementById('modalDate').textContent = memory.date;
-            document.getElementById('modalDescription').textContent = memory.description;
-            document.getElementById('likeCount').textContent = '0';
-
-            modal.classList.add('active');
-        });
-    });
-
-    modalClose.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
-
-    const likeBtn = document.getElementById('likeBtn');
-    if (likeBtn) {
-        likeBtn.addEventListener('click', function() {
-            const count = parseInt(document.getElementById('likeCount').textContent);
-            document.getElementById('likeCount').textContent = count + 1;
-            this.style.background = 'linear-gradient(to right, var(--pink-secondary), var(--pink-dark))';
-        });
+    if (!galleryItems || galleryItems.length === 0) {
+        clearInterval(confettiInterval);
+        return;
     }
+
+    // Cleanup on navigation away
+    window.addEventListener('beforeunload', () => {
+        clearInterval(confettiInterval);
+    });
+
+    // Add rotation/shake animation on click
+    galleryItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Add spin animation
+            this.style.animation = 'none';
+            setTimeout(() => {
+                this.style.animation = 'spinRotate 0.6s ease-in-out';
+            }, 10);
+            
+            // Remove animation class after it ends
+            setTimeout(() => {
+                this.style.animation = 'none';
+            }, 700);
+        });
+    });
 }
 
 function initMessagesPage() {
-    // Delegasi event untuk pesan sudah ada di shared.js
+    // Animate text words from left and right
+    const animatedTexts = document.querySelectorAll('.animated-text');
+    
+    animatedTexts.forEach(textElement => {
+        const text = textElement.textContent;
+        textElement.innerHTML = '';
+        
+        // Split text into words (preserve spaces and punctuation)
+        const words = text.split(/(\s+)/);
+        let delay = 0;
+        
+        words.forEach((word, index) => {
+            if (word.trim()) {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.textContent = word;
+                span.style.animationDelay = (delay * 0.15) + 's';
+                textElement.appendChild(span);
+                delay++;
+            } else if (word === ' ') {
+                // Add space node
+                const space = document.createElement('span');
+                space.textContent = word;
+                space.style.marginRight = '0';
+                textElement.appendChild(space);
+            }
+        });
+    });
+    
     console.log('Messages page initialized');
 }
 

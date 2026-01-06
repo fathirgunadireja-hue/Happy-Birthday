@@ -26,14 +26,15 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: white;
+            background: rgba(15, 25, 50, 0.95);
             border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             padding: 15px;
             z-index: 1500;
             max-width: 280px;
             animation: slideInRight 0.5s ease;
-            border: 2px solid #ff9cd6;
+            border: 2px solid rgba(120, 150, 255, 0.5);
+            backdrop-filter: blur(15px);
         }
 
         @keyframes slideInRight {
@@ -52,9 +53,10 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 15px;
-            color: #ff6b9d;
+            color: #7ba8ff;
             font-weight: 700;
             font-size: 1rem;
+            text-shadow: 0 0 8px rgba(120, 150, 255, 0.4);
         }
 
         .music-header i {
@@ -77,33 +79,34 @@
             align-items: center;
             gap: 10px;
             padding: 12px 15px;
-            background: white;
-            border: 2px solid #ffd6ec;
+            background: rgba(20, 30, 60, 0.6);
+            border: 2px solid rgba(120, 150, 255, 0.3);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
             text-align: left;
             font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
         .music-btn i {
             font-size: 1.1rem;
-            color: #ff6b9d;
+            color: #7ba8ff;
             flex-shrink: 0;
         }
 
         .music-btn:hover {
-            background: linear-gradient(135deg, #ffe0f0, #ffd6ec);
-            border-color: #ff9cd6;
+            background: rgba(30, 45, 80, 0.8);
+            border-color: rgba(120, 150, 255, 0.6);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+            box-shadow: 0 4px 12px rgba(120, 150, 255, 0.3);
         }
 
         .music-btn.active {
-            background: linear-gradient(135deg, #ff9cd6, #ffc0da);
-            border-color: #ff6b9d;
+            background: linear-gradient(135deg, rgba(120, 150, 255, 0.5), rgba(110, 210, 255, 0.5));
+            border-color: rgba(120, 150, 255, 0.8);
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+            box-shadow: 0 4px 15px rgba(120, 150, 255, 0.4);
         }
 
         .music-btn.active i {

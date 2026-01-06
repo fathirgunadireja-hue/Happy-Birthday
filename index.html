@@ -10,6 +10,17 @@
         /* Emoji Windows fix - gunakan multiple fonts untuk coverage maksimal */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
         
+        /* Force night theme background */
+        html, body {
+            background: radial-gradient(circle at 20% 20%, rgba(120, 150, 255, 0.18), transparent 32%),
+                radial-gradient(circle at 78% 14%, rgba(255, 140, 200, 0.18), transparent 32%),
+                radial-gradient(circle at 62% 78%, rgba(110, 210, 255, 0.14), transparent 30%),
+                linear-gradient(180deg, #040714 0%, #0a1230 52%, #02040f 100%) !important;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+        }
+        
         body, * {
             font-family: 'Comic Neue', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'Apple Color Emoji', system-ui, sans-serif;
         }
@@ -87,6 +98,7 @@
     <!-- PASSWORD SCREEN -->
     <div class="password-container" id="passwordContainer">
         <div class="password-background-animation" id="backgroundAnimation"></div>
+        <div class="stars" id="passwordStars"></div>
         
         <div class="password-box">
             <div class="lock-icon">
@@ -155,7 +167,18 @@
     </nav>
 
     <div class="homepage-container">
+        <div class="password-background-animation" id="homepageBackgroundAnimation"></div>
         <div class="stars" id="starsContainer"></div>
+        
+        <!-- LEFT STICKER -->
+        <div class="sticker sticker-left">
+            <canvas id="stickerCanvas1" class="sticker-canvas"></canvas>
+        </div>
+        
+        <!-- RIGHT STICKER -->
+        <div class="sticker sticker-right">
+            <canvas id="stickerCanvas2" class="sticker-canvas"></canvas>
+        </div>
         
         <div class="homepage-content">
             <h1 class="main-title">halloo Siti Hajar Almakki! 👋</h1>
@@ -165,25 +188,24 @@
                 <a href="#/game.html" class="nav-card">
                     <div class="nav-card-icon">🎮</div>
                     <div class="nav-card-title">Mainkan Game</div>
-                    <div class="nav-card-desc">Serius? Harus dimainkan sih! 😏</div>
                 </a>
 
-                <a href="#/gallery.html" class="nav-card">
+                <a href="#/gallery.html" class="nav-card locked-card" data-requires-level="4">
                     <div class="nav-card-icon">📸</div>
                     <div class="nav-card-title">Galeri Kita</div>
-                    <div class="nav-card-desc">Lihat kenangan-kenangan ganteng 😘</div>
+                    <div class="lock-overlay">🔒</div>
                 </a>
 
-                <a href="#/messages.html" class="nav-card">
+                <a href="#/messages.html" class="nav-card locked-card" data-requires-level="4">
                     <div class="nav-card-icon">💌</div>
                     <div class="nav-card-title">Pesan Cinta</div>
-                    <div class="nav-card-desc">Mungkin bikin kamu nangis 🥺❤️</div>
+                    <div class="lock-overlay">🔒</div>
                 </a>
 
-                <a href="#/timeline.html" class="nav-card">
-                    <div class="nav-card-icon">💕</div>
-                    <div class="nav-card-title">Perjalanan Kita</div>
-                    <div class="nav-card-desc">Dari dulu sampai sekarang (cerita panjang 📖)</div>
+                <a href="#/timeline.html" class="nav-card locked-card" data-requires-level="4">
+                    <div class="nav-card-icon">⏰</div>
+                    <div class="nav-card-title">Timeline</div>
+                    <div class="lock-overlay">🔒</div>
                 </a>
             </div>
         </div>
@@ -196,6 +218,8 @@
     
     <!-- GAME SECTION -->
     <section id="game-section" class="page-section">
+        <div class="password-background-animation" id="gameBackgroundAnimation"></div>
+        <div class="stars" id="gameStars"></div>
         <div class="container">
             <!-- HEADER GAME -->
             <div class="game-header">
@@ -294,69 +318,170 @@
 
     <!-- GALLERY SECTION -->
     <section id="gallery-section" class="page-section">
+        <div class="password-background-animation" id="galleryBackgroundAnimation"></div>
+        <div class="stars" id="galleryStars"></div>
+        <canvas id="galleryCanvas" class="gallery-confetti"></canvas>
         <div class="container">
             <h1 class="page-title">📸 Galeri Kenangan Kita 📸</h1>
             <p class="page-subtitle">Setiap momen dengan kamu adalah kenangan berharga 💕</p>
             
             <div class="gallery-grid">
-                <div class="gallery-item" data-id="1">
-                    <div class="gallery-emoji">🎓</div>
-                    <h3>Wisuda Bersama</h3>
+                <div class="gallery-item frame-style-1" data-id="1" data-image="foto/hajar/hajar1.jpeg" data-title="Momen Indah #1">
+                    <img src="foto/hajar/hajar1.jpeg" alt="Momen Indah #1">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #1</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="2">
-                    <div class="gallery-emoji">🌅</div>
-                    <h3>Fajar di Pantai</h3>
+                <div class="gallery-item frame-style-2" data-id="2" data-image="foto/hajar/hajar2.jpeg" data-title="Momen Indah #2">
+                    <img src="foto/hajar/fotoutama1.jpeg" alt="Momen Indah #2">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #2</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="3">
-                    <div class="gallery-emoji">🎂</div>
-                    <h3>Ulang Tahun Pertama</h3>
+                <div class="gallery-item frame-style-3" data-id="3" data-image="foto/hajar/hajar3.jpeg" data-title="Momen Indah #3">
+                    <img src="foto/hajar/hajar2.jpeg" alt="Momen Indah #3">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #3</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="4">
-                    <div class="gallery-emoji">✈️</div>
-                    <h3>Petualangan ke Bali</h3>
+                <div class="gallery-item frame-style-4" data-id="4" data-image="foto/hajar/hajar4.jpeg" data-title="Momen Indah #4">
+                    <img src="foto/hajar/hajar14.jpeg" alt="Momen Indah #4">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #4</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="5">
-                    <div class="gallery-emoji">💑</div>
-                    <h3>Momen Intim Kita</h3>
+                <div class="gallery-item frame-style-1" data-id="5" data-image="foto/hajar/hajar5.jpeg" data-title="Momen Indah #5">
+                    <img src="foto/hajar/hajar16.jpeg" alt="Momen Indah #5">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #5</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="6">
-                    <div class="gallery-emoji">🎪</div>
-                    <h3>Pesta Kejutan</h3>
+                <div class="gallery-item frame-style-2" data-id="6" data-image="foto/hajar/hajar6.jpeg" data-title="Momen Indah #6">
+                    <img src="foto/hajar/hajar12.jpeg" alt="Momen Indah #6">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #6</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="7">
-                    <div class="gallery-emoji">🍽️</div>
-                    <h3>Makan Malam Romantis</h3>
+                <div class="gallery-item frame-style-3" data-id="7" data-image="foto/hajar/hajar7.jpeg" data-title="Momen Indah #7">
+                    <img src="foto/hajar/hajar7.jpeg" alt="Momen Indah #7">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #7</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="8">
-                    <div class="gallery-emoji">🎭</div>
-                    <h3>Konser Musik Bersama</h3>
+                <div class="gallery-item frame-style-4" data-id="8" data-image="foto/hajar/hajar8.jpeg" data-title="Momen Indah #8">
+                    <img src="foto/hajar/hajar8.jpeg" alt="Momen Indah #8">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #8</h3>
+                    </div>
                 </div>
-                <div class="gallery-item" data-id="9">
-                    <div class="gallery-emoji">🌸</div>
-                    <h3>Piknik di Taman Bunga</h3>
+                <div class="gallery-item frame-style-1" data-id="9" data-image="foto/hajar/hajar9.jpeg" data-title="Momen Indah #9">
+                    <img src="foto/hajar/hajar9.jpeg" alt="Momen Indah #9">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #9</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-2" data-id="10" data-image="foto/hajar/hajar10.jpeg" data-title="Momen Indah #10">
+                    <img src="foto/hajar/hajar10.jpeg" alt="Momen Indah #10">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #10</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-3" data-id="11" data-image="foto/hajar/hajar11.jpeg" data-title="Momen Indah #11">
+                    <img src="foto/hajar/hajar11.jpeg" alt="Momen Indah #11">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #11</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-4" data-id="12" data-image="foto/hajar/hajar12.jpeg" data-title="Momen Indah #12">
+                    <img src="foto/hajar/hajar6.jpeg" alt="Momen Indah #12">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #12</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-1" data-id="13" data-image="foto/hajar/hajar13.jpeg" data-title="Momen Indah #13">
+                    <img src="foto/hajar/hajar13.jpeg" alt="Momen Indah #13">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #13</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-2" data-id="14" data-image="foto/hajar/hajar14.jpeg" data-title="Momen Indah #14">
+                    <img src="foto/hajar/hajar4.jpeg" alt="Momen Indah #14">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #14</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-3" data-id="15" data-image="foto/hajar/hajar15.jpeg" data-title="Momen Indah #15">
+                    <img src="foto/hajar/hajar15.jpeg" alt="Momen Indah #15">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #15</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-4" data-id="16" data-image="foto/hajar/hajar16.jpeg" data-title="Momen Indah #16">
+                    <img src="foto/hajar/hajar5.jpeg" alt="Momen Indah #16">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #16</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-1" data-id="17" data-image="foto/hajar/hajar17.jpeg" data-title="Momen Indah #17">
+                    <img src="foto/hajar/hajar17.jpeg" alt="Momen Indah #17">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #17</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-2" data-id="18" data-image="foto/hajar/hajar18.jpeg" data-title="Momen Indah #18">
+                    <img src="foto/hajar/hajar18.jpeg" alt="Momen Indah #18">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #18</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-3" data-id="19" data-image="foto/hajar/hajar19.jpeg" data-title="Momen Indah #19">
+                    <img src="foto/hajar/hajar19.jpeg" alt="Momen Indah #19">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #19</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-4" data-id="20" data-image="foto/hajar/hajar20.jpeg" data-title="Momen Indah #20">
+                    <img src="foto/hajar/hajar20.jpeg" alt="Momen Indah #20">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #20</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-1" data-id="21" data-image="foto/hajar/hajar21.jpeg" data-title="Momen Indah #21">
+                    <img src="foto/hajar/hajar21.jpeg" alt="Momen Indah #21">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #21</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-2" data-id="22" data-image="foto/hajar/hajar22.jpeg" data-title="Momen Indah #22">
+                    <img src="foto/hajar/hajar22.jpeg" alt="Momen Indah #22">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #22</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-3" data-id="23" data-image="foto/hajar/hajar23.jpeg" data-title="Momen Indah #23">
+                    <img src="foto/hajar/hajar23.jpeg" alt="Momen Indah #23">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #23</h3>
+                    </div>
+                </div>
+                <div class="gallery-item frame-style-4" data-id="24" data-image="foto/hajar/hajar24.jpeg" data-title="Momen Indah #24">
+                    <img src="foto/hajar/hajar3.jpeg" alt="Momen Indah #24">
+                    <div class="gallery-item-overlay">
+                        <h3>Momen Indah #24</h3>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL -->
-        <div class="modal" id="modal">
-            <div class="modal-content">
-                <span class="modal-close">&times;</span>
-                <div class="modal-image" id="modalImage">📸</div>
-                <h2 class="modal-title" id="modalTitle">Judul Kenangan</h2>
-                <p class="modal-date" id="modalDate">Tanggal</p>
-                <p class="modal-description" id="modalDescription">Deskripsi</p>
-                <div class="modal-actions">
-                    <button class="modal-btn" id="likeBtn">
-                        <i class="fas fa-heart"></i> Suka (<span id="likeCount">0</span>)
-                    </button>
-                </div>
-            </div>
-        </div>
+
+
+
     </section>
 
     <!-- MESSAGES SECTION -->
     <section id="messages-section" class="page-section">
+        <div class="password-background-animation" id="messagesBackgroundAnimation"></div>
+        <div class="stars" id="messagesStars"></div>
         <div class="container">
             <h1 class="page-title">💌 Love Notes dari Aku 💌</h1>
             <!-- Messages Container -->
@@ -369,86 +494,11 @@
                             <p class="message-time">Ditulis sambil tersenyum menyebalkan</p>
                         </div>
                     </div>
-                    <div class="message-content">
+                    <div class="message-content animated-text">
                         "Aku cinta kamu karena cara kamu melihatku seperti aku ini istimewa, padahal kamu lebih istimewa. Aku cinta kamu karena kamu bikin aku tertawa sampai pelupuk mata aku ngilu. Tapi yang paling bikin aku cinta adalah... karena kamu itu kamu, dan tidak ada yang bisa mengganti itu. Point blank! 💋"
                     </div>
-                    <div class="message-actions">
-                        <button class="message-action-btn">
-                            <i class="fas fa-heart"></i> Suka
-                        </button>
-                        <button class="message-action-btn">
-                            <i class="fas fa-comment"></i> Balas
-                        </button>
-                        <div class="reaction-counter">❤️ 999+</div>
-                    </div>
                 </div>
-
-                <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-icon">🌟</div>
-                        <div>
-                            <h3 class="message-title">Top 3 Hal Paling Nyebelin Tentang Kamu 😤</h3>
-                            <p class="message-time">Tapi paling aku sayangin</p>
-                        </div>
-                    </div>
-                    <div class="message-content">
-                        "Pertama: Cara kamu terlihat cantik tanpa usaha keras. Gaara! Aku harus sadar diri. Kedua: Kamu bisa bikin aku ketawa di saat paling gawat. Itu curang banget! Dan ketiga: Cara kamu cinta aku dengan 100% hati nurani, tanpa kompromi. Itu yang paling nyebelin karena aku jadi merasa guilty kalau aku tidak memberikan yang sama. Tapi thanks ya udah ngajarin aku gimana caranya cinta yang beneran. 🥺💖"
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-action-btn">
-                            <i class="fas fa-heart"></i> Suka
-                        </button>
-                        <button class="message-action-btn">
-                            <i class="fas fa-comment"></i> Balas
-                        </button>
-                        <div class="reaction-counter">❤️ 888</div>
-                    </div>
-                </div>
-
-                <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-icon">🎂</div>
-                        <div>
-                            <h3 class="message-title">Masa Depan Kita (Spoiler Alert! ⚠️)</h3>
-                            <p class="message-time">Rencana rahasia yang udah aku pikirin</p>
-                        </div>
-                    </div>
-                    <div class="message-content">
-                        "Aku ingin terus nyebelin kamu sampai kita tua. Aku ingin teman tidurku selamanya adalah kamu (dan juga kucing kalau kita adopt 😹). Aku ingin masa depan kita penuh dengan tawa, petualangan, dan mungkin sedikit drama (tapi yang lucu ya, bukan yang serius!). Yang paling penting, aku ingin setiap hari bangun dan lihat wajah bahagia kamu, tahu bahwa aku adalah alasan kamu tersenyum. Kamu mau nggak? 👉👈💕"
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-action-btn">
-                            <i class="fas fa-heart"></i> Suka
-                        </button>
-                        <button class="message-action-btn">
-                            <i class="fas fa-comment"></i> Balas
-                        </button>
-                        <div class="reaction-counter">❤️ 777</div>
-                    </div>
-                </div>
-
-                <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-icon">✨</div>
-                        <div>
-                            <h3 class="message-title">Thank You, My Love 🥺</h3>
-                            <p class="message-time">Dari hati yang terdalam</p>
-                        </div>
-                    </div>
-                    <div class="message-content">
-                        "Terima kasih sudah menjadi orang yang aku tunggu-tunggu. Terima kasih karena kamu mengerti aku bahkan saat aku sendiri tidak mengerti diri sendiri. Terima kasih karena kamu membuat hidup ini menjadi lebih berwarna. Dan terima kasih karena kamu memilih untuk tetap bersama aku. Kamu adalah hadiah terbesar yang pernah aku terima. 💝🎀"
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-action-btn">
-                            <i class="fas fa-heart"></i> Suka
-                        </button>
-                        <button class="message-action-btn">
-                            <i class="fas fa-comment"></i> Balas
-                        </button>
-                        <div class="reaction-counter">❤️ 1K+</div>
-                    </div>
-                </div>
-
+                
                 <div class="message-card special-message">
                     <div class="message-header">
                         <div class="message-icon">🎉</div>
@@ -457,17 +507,8 @@
                             <p class="message-time">Spesial untuk hari spesialmu</p>
                         </div>
                     </div>
-                    <div class="message-content">
+                    <div class="message-content animated-text">
                         "SELAMAT ULANG TAHUN CANTIK/GANTENG! 🎉🎂✨ Hari ini bukan hanya hari istimewa buat kamu, tapi juga buat aku karena aku mendapat privilege untuk merayakan hari istimewa ini bersama dengan orang yang paling aku cinta. Aku harap hari ini kamu tersenyum sepuasnya, ketawa sampe perut sakit, dan merasakan kebahagiaan yang setinggi langit. Kamu layak mendapatkan semuanya yang terbaik. Aku cinta kamu, sekarang dan selamanya. Selamat menulis halaman baru dalam kisah hidup kita! 💕🎊"
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-action-btn">
-                            <i class="fas fa-heart"></i> Suka
-                        </button>
-                        <button class="message-action-btn">
-                            <i class="fas fa-comment"></i> Balas
-                        </button>
-                        <div class="reaction-counter">❤️ INFINITE 💕</div>
                     </div>
                 </div>
             </div>
@@ -476,6 +517,8 @@
 
     <!-- TIMELINE SECTION -->
     <section id="timeline-section" class="page-section">
+        <div class="password-background-animation" id="timelineBackgroundAnimation"></div>
+        <div class="stars" id="timelineStars"></div>
         <div class="container">
             <h1 class="page-title">💕 Perjalanan Kita 💕</h1>
             <p class="page-subtitle">Dari yang dulu sampai sekarang, setiap momen adalah spesial 📖✨</p>
@@ -574,8 +617,8 @@
             passwordContainer.style.display = 'none';
         }
 
-        // Tambah background animation emoji
-        const emojis = ['💖', '🎂', '🎉', '🌟', '💕', '🎁', '✨', '💌'];
+        // Tambah background animation bintang
+        const emojis = ['⭐', '✨', '🌟', '💫', '⭐', '✨', '🌟', '💫'];
         const bgAnimation = document.getElementById('backgroundAnimation');
         for (let i = 0; i < 20; i++) {
             const emoji = document.createElement('div');
@@ -587,6 +630,40 @@
             emoji.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
             bgAnimation.appendChild(emoji);
         }
+
+        // Tambah background animation emoji untuk semua section (homepage + game/galeri/pesan/timeline)
+        setTimeout(function() {
+            if (typeof createFloatingEmojis === 'function') {
+                createFloatingEmojis('homepageBackgroundAnimation');
+                createFloatingEmojis('gameBackgroundAnimation');
+                createFloatingEmojis('galleryBackgroundAnimation');
+                createFloatingEmojis('messagesBackgroundAnimation');
+                createFloatingEmojis('timelineBackgroundAnimation');
+            } else {
+                // Fallback jika fungsi belum tersedia
+                const targets = [
+                    'homepageBackgroundAnimation',
+                    'gameBackgroundAnimation',
+                    'galleryBackgroundAnimation',
+                    'messagesBackgroundAnimation',
+                    'timelineBackgroundAnimation'
+                ];
+                targets.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    for (let i = 0; i < 20; i++) {
+                        const emoji = document.createElement('div');
+                        emoji.className = 'floating-emoji';
+                        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                        emoji.style.left = Math.random() * 100 + '%';
+                        emoji.style.top = Math.random() * 100 + '%';
+                        emoji.style.animationDelay = Math.random() * 6 + 's';
+                        emoji.style.fontSize = (Math.random() * 1.5 + 2) + 'rem';
+                        el.appendChild(emoji);
+                    }
+                });
+            }
+        }, 100);
 
         // Number button handlers
         numButtons.forEach(btn => {
@@ -707,16 +784,26 @@
         // Set first input focus
         passwordDigits[0].focus();
     
-        // Generate stars
-        const starsContainer = document.getElementById('starsContainer');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            starsContainer.appendChild(star);
+        // Generate stars for all sections
+        function createStars(containerId, count = 100) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
         }
+
+        createStars('starsContainer', 120);
+        createStars('passwordStars', 80);
+        createStars('gameStars', 100);
+        createStars('galleryStars', 100);
+        createStars('messagesStars', 100);
+        createStars('timelineStars', 100);
 
         // Confetti animation on page load
         function createConfetti() {
@@ -774,6 +861,82 @@
                 });
             });
         }
+    </script>
+
+    <!-- WARNING MODAL FOR LOCKED SECTIONS -->
+    <div class="warning-modal" id="warningModal">
+        <div class="warning-modal-content">
+            <div class="warning-icon">😜</div>
+            <h2 class="warning-title">Eitsss! Sabar dulu dong! 😤</h2>
+            <p class="warning-text">Kamu pikir bisa langsung lihat itu? <strong>Nggak segampang itu ferguso!</strong> 😏</p>
+            <p class="warning-text">Main game dulu sampe level 4 selesai! Jangan males! 🎮💪</p>
+            <p class="warning-subtext">(Iya, aku serius. Nggak ada shortcut! 😝)</p>
+            <button class="warning-btn" id="closeWarningBtn">
+                <i class="fas fa-gamepad"></i> Oke deh, main dulu...
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Check and update locked cards based on game progress
+        function updateLockedCards() {
+            const savedState = localStorage.getItem('birthdayGameState');
+            const gameState = savedState ? JSON.parse(savedState) : { completedLevels: [] };
+            const isLevel4Complete = gameState.completedLevels && gameState.completedLevels.includes(4);
+            
+            // Get all cards that should be locked
+            const cardsToLock = document.querySelectorAll('[data-requires-level="4"]');
+            
+            cardsToLock.forEach(card => {
+                if (isLevel4Complete) {
+                    // Unlock: remove locked-card class and lock overlay
+                    card.classList.remove('locked-card');
+                    const lockOverlay = card.querySelector('.lock-overlay');
+                    if (lockOverlay) lockOverlay.remove();
+                } else {
+                    // Lock: add locked-card class and lock overlay if not already there
+                    if (!card.classList.contains('locked-card')) {
+                        card.classList.add('locked-card');
+                        
+                        // Create lock overlay if it doesn't exist
+                        if (!card.querySelector('.lock-overlay')) {
+                            const lockOverlay = document.createElement('div');
+                            lockOverlay.className = 'lock-overlay';
+                            lockOverlay.textContent = '🔒';
+                            card.appendChild(lockOverlay);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Handle locked card clicks
+        document.addEventListener('click', function(e) {
+            const lockedCard = e.target.closest('.locked-card');
+            if (lockedCard) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.getElementById('warningModal').classList.add('active');
+                return false;
+            }
+        });
+        
+        // Close warning modal
+        document.getElementById('closeWarningBtn').addEventListener('click', function() {
+            document.getElementById('warningModal').classList.remove('active');
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('warningModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+        
+        // Update on page load and storage change
+        updateLockedCards();
+        window.addEventListener('storage', updateLockedCards);
+        setInterval(updateLockedCards, 500); // More frequent check for responsiveness
     </script>
 </body>
 </html>
